@@ -7,9 +7,9 @@ class Diary extends BaseCtrl
         this.selectionMask = [];
         this.fullViewIndex = null;
     }
-    AttachTo(pShelter){
-        pShelter.ctrl = this;
-        this.view = pShelter;
+    AttachTo(pView){
+        pView.ctrl = this;
+        this.view = pView;
         let eventName = document.body.ontouchstart?"touchstart":"click";
         this.AssignHandlers("#diaryDeleteBtn", eventName, [this.DiaryDeleteBtnClick]);
     }

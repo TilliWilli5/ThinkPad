@@ -7,27 +7,126 @@ class SIM extends BaseCtrl
         this.mode = SIMMode.ZERO;
         this.enviroment = util.DefineEnviroment();//Не оч красивое решение, но на первое время норм
     }
-    AttachTo(pShelter){
-        pShelter.ctrl = this;
-        this.view = pShelter;
-        this.AssignHandlers("titleInput", "keydown", [this.TitleBackspaceHandler, this.TitleFirstCharHandler, this.TitleEnterHandler, this.TabHandler]);
-        this.AssignHandlers("descInput", "keydown", [this.DescBackspaceHandler, this.DescEnterHandler, this.TabHandler]);
-        this.AssignHandlers("tagInput", "keydown", [this.TagBackspaceHandler, this.TagEnterHandler]);
+    AttachTo(pView){
+        // pView.ctrl = this;
+        // this.view = pView;
+        super.AttachTo(pView);
+        this.AssignHandlers("#titleInput", "keydown", [this.TitleBackspaceHandler, this.TitleFirstCharHandler, this.TitleEnterHandler, this.TabHandler]);
+        this.AssignHandlers("#descInput", "keydown", [this.DescBackspaceHandler, this.DescEnterHandler, this.TabHandler]);
+        this.AssignHandlers("#tagInput", "keydown", [this.TagBackspaceHandler, this.TagEnterHandler]);
         let eventName = document.body.ontouchstart?"touchstart":"click";
-        this.AssignHandlers("tagBar", eventName, [this.TagBarClickHandler]);
-        this.AssignHandlers("tagFieldBar", eventName, [this.TagBarClickHandler]);
+        this.AssignHandlers("#tagBar", eventName, [this.TagBarClickHandler]);
+        this.AssignHandlers("#tagFieldBar", eventName, [this.TagBarClickHandler]);
     }
-    AssignHandlers(pElementId, pEventName, pHandlerArray){
+    // AssignHandlers(pElementId, pEventName, pHandlerArray){
         
-        for(let iX=0; iX<pHandlerArray.length; ++iX)
+    //     for(let iX=0; iX<pHandlerArray.length; ++iX)
+    //     {
+    //         this.view.addEventListener(pEventName, function(pEvent){
+    //             if(pEvent.target.id === pElementId)
+    //                 pHandlerArray[iX].call(this.ctrl, pEvent);
+    //         });
+    //     }
+    // }
+    //Inner Methods
+    ChangeMode(pMode){
+        this.mode = pMode;
+        console.log("Enter mode: " + SIMModetoName[pMode]);
+        switch(pMode)
         {
-            this.view.addEventListener(pEventName, function(pEvent){
-                if(pEvent.target.id === pElementId)
-                    pHandlerArray[iX].call(this.ctrl, pEvent);
-            });
+            case SIMMode.ZERO:{
+                this.view.querySelector("#modeIcon").ctrl.Hide();
+                this.view.querySelector("#titleLabel").ctrl.Hide();
+            };break;
+            case SIMMode.COMP:{
+                this.view.querySelector("#titleLabel").ctrl.Show();
+            };break;
+            case SIMMode.SEARCH:{
+                this.view.querySelector("#modeIcon").ctrl.ChangeMode(SIMMode.SEARCH);
+            };break;
+            case SIMMode.SYNC:{
+                this.view.querySelector("#modeIcon").ctrl.ChangeMode(SIMMode.SYNC);
+            };break;
         }
     }
-    //Handlers
+    GotoTitleInput(){
+        this.FocusTo(this.view.querySelector("#titleInput"));//Фокусировка в Chrome
+        this.view.querySelector("#titleInput").focus();//Фокусировка в Firefox
+        this.view.querySelector("#descLabel").ctrl.Hide();
+        this.view.querySelector("#descBar").ctrl.Hide();
+        this.view.querySelector("#descUnderline").ctrl.Hide();
+        this.view.querySelector("#titleUnderline").ctrl.Hide();
+    }
+    GotoDescInput(){
+        this.view.querySelector("#tagLabel").ctrl.Hide();
+        this.view.querySelector("#tagBar").ctrl.Hide();
+        this.view.querySelector("#descBar").ctrl.Show();
+        this.view.querySelector("#descLabel").ctrl.Show();
+        this.view.querySelector("#descUnderline").ctrl.Hide();
+        this.view.querySelector("#titleUnderline").ctrl.Show();
+        this.FocusTo(this.view.querySelector("#descInput"));//Фокусировка в Chrome
+        this.view.querySelector("#descInput").focus();//Фокусировка в Firefox
+    }
+    GotoTagInput(){
+        this.view.querySelector("#tagBar").ctrl.Show();
+        this.view.querySelector("#tagLabel").ctrl.Show();
+        this.view.querySelector("#descUnderline").ctrl.Show();
+        // this(this.view.querySelector("#tagInput").innerHTML === "")
+        // {
+        //     this.view.querySelector("#tagInput").innerHTML = "<br>";
+        // }
+        this.FocusTo(this.view.querySelector("#tagInput"));//Фокусировка в Chrome
+        this.view.querySelector("#tagInput").focus();//Фокусировка в Firefox
+    }
+    CreateIssue(){
+        alert("Issue: [" + this.view.querySelector("#titleInput").innerText + "] created.");
+        this.Reset();
+    }
+    AddTag(){
+
+    }
+    DeleteTag(){
+
+    }
+    FocusTo(pElement, pCollapseToStart){
+        let wasEmptyInput = false;
+        let selection = window.getSelection();
+        let range = document.createRange();
+        // range.setStart(pElement, 0);
+        // range.setEnd(pElement, 0);
+        if(pElement.innerHTML === "")
+        {
+            wasEmptyInput = true;
+            pElement.innerText = ".";
+        }
+        range.selectNodeContents(pElement);
+        range.collapse(pCollapseToStart);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        if(wasEmptyInput)
+            pElement.innerHTML = "";
+    }
+    Reset(){
+        //Hide all stuff
+        this.view.querySelector("#tagLabel").ctrl.Hide();
+        this.view.querySelector("#tagBar").ctrl.Hide();
+        this.view.querySelector("#descUnderline").ctrl.Hide();
+        this.view.querySelector("#descLabel").ctrl.Hide();
+        this.view.querySelector("#descBar").ctrl.Hide();
+        this.view.querySelector("#titleUnderline").ctrl.Hide();
+        this.view.querySelector("#titleLabel").ctrl.Hide();
+        //Clear all inputs
+        this.view.querySelector("#tagField").innerHTML = "";
+        this.view.querySelector("#tagInput").innerHTML = "";
+        this.view.querySelector("#descInput").innerHTML = "";
+        this.view.querySelector("#titleInput").innerHTML = "";
+        //Init setup
+        this.mode = SIMMode.ZERO;
+        //Focus
+        this.FocusTo(this.view.querySelector("#titleInput"));//Фокусировка в Chrome
+        this.view.querySelector("#titleInput").focus();//Фокусировка в Firefox
+    }
+    //Inner Handlers
     TitleFirstCharHandler(pEvent){
         if(pEvent.target.id === "titleInput")
         {
@@ -168,103 +267,6 @@ class SIM extends BaseCtrl
         this.FocusTo(this.view.querySelector("#tagInput"));//Фокусировка в Chrome
         this.view.querySelector("#tagInput").focus();//Фокусировка в Firefox
     }
+    //Delegates
     //Events
-    ChangeMode(pMode){
-        this.mode = pMode;
-        console.log("Enter mode: " + SIMModetoName[pMode]);
-        switch(pMode)
-        {
-            case SIMMode.ZERO:{
-                this.view.querySelector("#modeIcon").ctrl.Hide();
-                this.view.querySelector("#titleLabel").ctrl.Hide();
-            };break;
-            case SIMMode.COMP:{
-                this.view.querySelector("#titleLabel").ctrl.Show();
-            };break;
-            case SIMMode.SEARCH:{
-                this.view.querySelector("#modeIcon").ctrl.ChangeMode(SIMMode.SEARCH);
-            };break;
-            case SIMMode.SYNC:{
-                this.view.querySelector("#modeIcon").ctrl.ChangeMode(SIMMode.SYNC);
-            };break;
-        }
-    }
-    GotoTitleInput(){
-        this.FocusTo(this.view.querySelector("#titleInput"));//Фокусировка в Chrome
-        this.view.querySelector("#titleInput").focus();//Фокусировка в Firefox
-        this.view.querySelector("#descLabel").ctrl.Hide();
-        this.view.querySelector("#descBar").ctrl.Hide();
-        this.view.querySelector("#descUnderline").ctrl.Hide();
-        this.view.querySelector("#titleUnderline").ctrl.Hide();
-    }
-    GotoDescInput(){
-        this.view.querySelector("#tagLabel").ctrl.Hide();
-        this.view.querySelector("#tagBar").ctrl.Hide();
-        this.view.querySelector("#descBar").ctrl.Show();
-        this.view.querySelector("#descLabel").ctrl.Show();
-        this.view.querySelector("#descUnderline").ctrl.Hide();
-        this.view.querySelector("#titleUnderline").ctrl.Show();
-        this.FocusTo(this.view.querySelector("#descInput"));//Фокусировка в Chrome
-        this.view.querySelector("#descInput").focus();//Фокусировка в Firefox
-    }
-    GotoTagInput(){
-        this.view.querySelector("#tagBar").ctrl.Show();
-        this.view.querySelector("#tagLabel").ctrl.Show();
-        this.view.querySelector("#descUnderline").ctrl.Show();
-        // this(this.view.querySelector("#tagInput").innerHTML === "")
-        // {
-        //     this.view.querySelector("#tagInput").innerHTML = "<br>";
-        // }
-        this.FocusTo(this.view.querySelector("#tagInput"));//Фокусировка в Chrome
-        this.view.querySelector("#tagInput").focus();//Фокусировка в Firefox
-    }
-    CreateIssue(){
-        alert("Issue: [" + this.view.querySelector("#titleInput").innerText + "] created.");
-        this.Reset();
-    }
-    AddTag(){
-
-    }
-    DeleteTag(){
-
-    }
-    //Aux
-    FocusTo(pElement, pCollapseToStart){
-        let wasEmptyInput = false;
-        let selection = window.getSelection();
-        let range = document.createRange();
-        // range.setStart(pElement, 0);
-        // range.setEnd(pElement, 0);
-        if(pElement.innerHTML === "")
-        {
-            wasEmptyInput = true;
-            pElement.innerText = ".";
-        }
-        range.selectNodeContents(pElement);
-        range.collapse(pCollapseToStart);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        if(wasEmptyInput)
-            pElement.innerHTML = "";
-    }
-    Reset(){
-        //Hide all stuff
-        this.view.querySelector("#tagLabel").ctrl.Hide();
-        this.view.querySelector("#tagBar").ctrl.Hide();
-        this.view.querySelector("#descUnderline").ctrl.Hide();
-        this.view.querySelector("#descLabel").ctrl.Hide();
-        this.view.querySelector("#descBar").ctrl.Hide();
-        this.view.querySelector("#titleUnderline").ctrl.Hide();
-        this.view.querySelector("#titleLabel").ctrl.Hide();
-        //Clear all inputs
-        this.view.querySelector("#tagField").innerHTML = "";
-        this.view.querySelector("#tagInput").innerHTML = "";
-        this.view.querySelector("#descInput").innerHTML = "";
-        this.view.querySelector("#titleInput").innerHTML = "";
-        //Init setup
-        this.mode = SIMMode.ZERO;
-        //Focus
-        this.FocusTo(this.view.querySelector("#titleInput"));//Фокусировка в Chrome
-        this.view.querySelector("#titleInput").focus();//Фокусировка в Firefox
-    }
 }
