@@ -2,7 +2,7 @@
 class Emitter extends Delegate
 {
     constructor(pCore){
-        super();
+        super(pCore);
     }
     On(pEventName, pNewHandler){
         let events = Emitter.heap.get(this);

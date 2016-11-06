@@ -1,9 +1,10 @@
 "use strict";
-class SIM
+class SIM extends BaseCtrl
 {
-    constructor(){
+    constructor(pCore){
+        super(pCore);
+        // this.view = null;
         this.mode = SIMMode.ZERO;
-        this.view = null;
         this.enviroment = util.DefineEnviroment();//Не оч красивое решение, но на первое время норм
     }
     AttachTo(pShelter){

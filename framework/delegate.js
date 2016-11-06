@@ -1,8 +1,8 @@
 "use strict";
 class Delegate extends Base
 {
-    constructor(){
-        super();
+    constructor(pCore){
+        super(pCore);
     }
     Delegate(pMethodName){
         return this[pMethodName].bind(this);

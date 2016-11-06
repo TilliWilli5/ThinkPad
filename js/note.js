@@ -1,13 +1,15 @@
 class Note extends BaseCtrl
 {
-    constructor(pTitle, pDesc, pTags){
-        super();
-        this.view = null;
-        this.isHidden = true;
+    constructor(pCore){
+        super(pCore);
+        // this.view = null;
+        // this.isHidden = true;
         this.isFolded = true;
-        this.title = pTitle;
-        this.desc = pDesc;
-        this.tags = pTags;
+        // this.title = pTitle;
+        // this.desc = pDesc;
+        // this.tags = pTags;
+        // if(pCore)
+        //     Object.assign(this, pCore);
     }
     Render(){
         let theView = document.createElement("div");

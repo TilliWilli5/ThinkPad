@@ -2,7 +2,7 @@
 class BaseCtrl extends Emitter
 {
     constructor(pCore){
-        super();
+        super(pCore);
         this.view = null;
         this.isHidden = true;
     }

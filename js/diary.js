@@ -25,7 +25,7 @@ class Diary extends BaseCtrl
         return false;
     }
     Add(pNote){
-        let theNote = new Note(pNote.title, pNote.desc, "#" + pNote.tags.join(" #"));
+        let theNote = new Note(pNote);
         theNote.On("swipeUp", this.Delegate("InEventNoteSwipeUp"));
         theNote.On("swipeDown", this.Delegate("InEventNoteSwipeDown"));
         theNote.On("swipeLeft", this.Delegate("InEventNoteSwipeLeft"));
