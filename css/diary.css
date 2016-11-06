@@ -1,0 +1,163 @@
+body
+{
+    display: flex;
+    flex-direction: column;
+    height:100%
+}
+#diary
+{
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-size:2em;
+    color:slategrey;
+    flex:1;
+}
+#noteList
+{
+    display: flex;
+    flex-direction: column;
+    flex:9;
+}
+    .note
+    {
+        display: flex;
+        flex-wrap: wrap;
+        position:relative;
+        cursor: pointer;
+    }
+        .note::before
+        {
+            content:"";
+            position:absolute;
+            border-bottom:2px solid lightgrey;
+            border-image: linear-gradient(to right, lightgrey, rgba(0,0,0,0));
+            border-image-slice: 1;
+            width:100%;
+            height:100%;
+            pointer-events: none;
+        }
+    .noteHandle
+    {
+        display:none;
+        text-align: center;
+        border-radius:0.4em;
+        width:0.4em;
+        height:0.4em;
+        border:2px solid grey;
+        /*Отступ слева*/
+        margin-left:8px;
+        /*Автоматическое выравнивание по высоте*/
+        margin-top:auto;
+        margin-bottom:auto;
+        /*Отступ для последующей записи*/
+        margin-right:8px;
+        transition:border-width 0.2s, border-color 0.2s, background-color 0.2s;
+    }
+        .noteHandle:hover
+        {
+            border-width: 0.2em;
+            border-color: grey;
+            background-color:grey;
+        }
+    .noteBody
+    {
+        cursor:inherit;
+        display:flex;
+        flex-direction: column;
+        position:relative;
+        flex:1;
+    }
+        /*Чтобы удалить серые засечки перед записями - удали класс .noteBody::before*/
+        /*.noteBody::before
+        {
+            content:"";
+            position:absolute;
+            width:0.5%;
+            height:calc(100% + 1px);
+            border-left:4px solid grey;
+        }*/
+        .noteBody:hover::before
+        {
+            content:"";
+            position:absolute;
+            width:0.5%;
+            height:calc(100% + 1px);
+            border-left:4px solid grey;
+        }
+        .noteBodyFullView::before
+        {
+            content:"";
+            position:absolute;
+            width:0.5%;
+            height:calc(100% + 1px);
+            border-left:4px solid grey;
+        }
+        .noteTitle
+        {
+            text-align: left;
+            margin-left:8px;
+        }
+            .noteTitle:hover
+            {
+                color:deepskyblue;
+            }
+            .noteTitle:hover
+            {
+                color:deepskyblue;
+            }
+        .noteDesc
+        {
+            display:none;
+            max-height: 0;
+            overflow: hidden;
+            margin-left:8px;
+        }
+        .noteTagField
+        {
+            display:none;
+            max-height: 0;
+            overflow: hidden;
+            margin-left:8px;
+        }
+/*
+======================================
+Footer part
+======================================
+*/
+#diaryActionBar
+{
+    display: flex;
+    justify-content: space-around;
+    flex:1;
+    max-height:0;
+    position:fixed;
+    bottom:0%;
+    left:0%;
+    width:100%;
+    background-color: rgba(255,255,255,0.8);
+    box-shadow: 0px 0px 15px 10px rgba(255,255,255, 1);
+}
+    .diaryActionButton
+    {
+        border-radius:2px;
+        border:1px solid slategrey;
+        font-size:0.75em;
+        text-align:center;
+        margin:auto;
+        cursor:pointer;
+        padding:4px;
+    }
+        .diaryActionButton:hover
+        {
+            color:white;
+            border-color:deepskyblue;
+            color:deepskyblue;
+        }
+        #diaryDeleteBtn:hover
+        {
+            color:white;
+            border-color:indianred;
+            color:indianred;
+
+        }
