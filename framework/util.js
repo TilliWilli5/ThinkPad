@@ -20,15 +20,15 @@ util.DefineEnviroment = function(){
     if(window)
     {
         if(window.navigator.userAgent.indexOf("Firefox/") !== -1)
-            return UtilEnviroment.FIREFOX;
+            return this.enviroment.FIREFOX;
         if(window.navigator.userAgent.indexOf("Chrome/") !== -1)
-            return UtilEnviroment.CHROME;
+            return this.enviroment.CHROME;
         if(window.navigator.userAgent.indexOf("Version/") !== -1)
-            return UtilEnviroment.SAFARI;
+            return this.enviroment.SAFARI;
     }
     else
     {
-        return UtilEnviroment.NODEJS;
+        return this.enviroment.NODEJS;
     }
 }
 util.FindParent = function(pStartElement, pSelector = "", pInclusive = false){

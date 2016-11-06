@@ -1,9 +1,62 @@
+/*SIM*/
+@keyframes scaleUp
+{
+    0%   {width:0em;opacity:0.0;}
+    100% {width:1em;opacity:1.0;}
+}
+    @keyframes scaleDown
+    {
+        0%   {width:0em;opacity:0.0;}
+        100% {width:1em;opacity:1.0;}
+    }
+@keyframes xScaleUp
+{
+    0%   {width:0em;opacity:0.0;}
+    100% {width:3em;opacity:1.0;}
+}
+    @keyframes xScaleDown
+    {
+        0%   {width:0em;opacity:0.0;}
+        100% {width:3em;opacity:1.0;}
+    }
 @keyframes yScaleUp
+{
+    0%   {height:0em;opacity:0.0;}
+    100% {height:2em;opacity:1.0;}
+}
+    @keyframes yScaleDown
+    {
+        0%   {height:0em;opacity:0.0;}
+        100% {height:2em;opacity:1.0;}
+    }
+@keyframes underlineUp
+{
+    0%   {width:0%;opacity:0.0;}
+    100% {width:100%;opacity:1.0;}
+}
+    @keyframes underlineDown
+    {
+        0%   {width:0%;opacity:0.0;}
+        100% {width:100%;opacity:1.0;}
+    }
+@keyframes tagShow
+{
+    0%   {transform: scale(0,0);opacity:0.0;}
+    100% {transform: scale(1,1);opacity:1.0;}
+}
+    @keyframes tagHide
+    {
+        0%   {transform: scale(0,0);opacity:0.0;}
+        100% {transform: scale(1,1);opacity:1.0;}
+    }
+
+/*Diary*/
+@keyframes yScaleUpDiary
 {
     0%      {max-height:0;opacity:0.0}
     100%      {max-height:1.5em;opacity:1.0}
 }
-    @keyframes yScaleDown
+    @keyframes yScaleDownDiary
     {
         0%      {max-height:0;opacity:0.0}
         100%      {max-height:1.5em;opacity:1.0}

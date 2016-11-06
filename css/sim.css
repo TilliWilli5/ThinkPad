@@ -1,0 +1,166 @@
+#sim
+{
+    border-radius:2px;
+    border:1px solid lightgrey;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+}
+.bar
+{
+    display:flex;
+}
+hr
+{
+    width:100%;
+    border-top:0px;
+    border-bottom:1px solid lightgray;
+    display:none;
+    animation:underlineUp 1s;
+}
+#sim #modeIcon
+{
+    font-size:2em;
+    color:deepskyblue;
+}
+#sim .preLabel
+{
+    font-size:2em;
+    color:lightgrey;
+    overflow: hidden;
+    width:0em;
+    text-align: center;
+}
+#titleInput, #descInput
+{
+    font-size:2em;
+    color: slategrey;
+    resize: none;
+    flex:1;
+    border:0px;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+    /*Отключаем дефолтное оформление в Chrome*/
+    #titleInput:focus, #descInput:focus, #tagInput:focus
+    {
+        outline: none;
+    }
+#tagBar
+{
+    cursor: text;
+}
+#tagFieldBar
+{
+    /*display: flex;*/
+    /*font-size:2em;*/
+    /*color: slategrey;*/
+    resize: none;
+    flex:1;
+    border:0px;
+    overflow: hidden;
+    /*word-wrap: break-word;*/
+    /*word-break: break-all;*/
+}
+#tagField
+{
+    float:left;
+}
+#tagInput
+{
+    font-size:2em;
+    color: slategrey;
+    resize: none;
+    flex:1;
+    border:0px;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-all;
+    float:left;
+}
+#descBar, #tagBar
+{
+    height:0px;
+}
+/*
+==========
+Tags stuff
+==========
+*/
+.tag
+{
+/*border:1px solid deepskyblue;*/
+border-radius:5px;
+/*background-color:rgba(192, 224, 239, 1);*/
+display:inline-block;
+padding:2px;
+margin:5px;
+color: deepskyblue;
+transition: color 0.3s;
+cursor:pointer;
+position:relative;
+animation: tagShow 0.4s forwards;
+}
+    .tag:hover
+    {
+        color:indianred;
+        transition: color 0.3s;
+        /*text-decoration: line-through;
+        transition: text-decoration 0.3s;*/
+    }
+    .tag::before
+    {
+        content:"";
+        position:absolute;
+        border-bottom: 1px solid grey;
+        top:50%;
+        left:0px;
+        width:100%;
+        /*transition:width 0.3s;*/
+        transition:transform 0.1s;
+        transform:scale(0,1);
+    }
+    .tag:hover::before
+    {
+        content:"";
+        position:absolute;
+        border-bottom: 1px solid indianred;
+        top:50%;
+        left:0px;
+        width:100%;
+        /*transition:width 0.3s;*/
+        transition:transform 0.3s;
+        transform:scale(1,1);
+    }
+.tagLabel
+{
+color:inherit;
+text-decoration: inherit;
+font-size:2em;
+padding:0;
+margin:0;
+float:left;
+/*position:relative;*/
+}
+.tagClose
+{
+vertical-align:text-bottom;
+border:1px solid lightgrey;
+transition: border 0.1s;
+/*box-shadow:0px 0px 2px #2666AD;*/
+/*background-color:LightCoral;*/
+width:1.25vw;
+height:1.25vw;
+border-radius:1vw;
+background-color:rgba(0,0,0,0.0);
+/*padding:0;*/
+/*margin:5px;*/
+/*font-weight:bold;*/
+}
+    .tagClose:hover
+    {
+        /*background-color: indianred;*/
+        border:0.5vw solid indianred;
+        transition: border 0.1s;
+    }

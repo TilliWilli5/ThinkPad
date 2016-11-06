@@ -63,40 +63,40 @@ class Note extends BaseCtrl
     Expand(){
         let desc = this.view.querySelector(".noteDesc");
         let tagField = this.view.querySelector(".noteTagField");
-        if(desc.style.animationName === "yScaleDown" || desc.style.animationName === "")
+        if(desc.style.animationName === "yScaleDownDiary" || desc.style.animationName === "")
         {
             desc.style.display = "initial";
             tagField.style.display = "initial";
-            desc.style.animation = "yScaleUp 0.3s forwards";
-            tagField.style.animation = "yScaleUp 0.3s forwards ease-out";
+            desc.style.animation = "yScaleUpDiary 0.3s forwards";
+            tagField.style.animation = "yScaleUpDiary 0.3s forwards ease-out";
             this.view.querySelector(".noteBody").classList.add("noteBodyFullView");
         }
     }
     Fold(){
         let desc = this.view.querySelector(".noteDesc");
         let tagField = this.view.querySelector(".noteTagField");
-        if(desc.style.animationName === "yScaleUp")
+        if(desc.style.animationName === "yScaleUpDiary")
         {
-            desc.style.animation = "yScaleDown 0.3s reverse forwards";
-            tagField.style.animation = "yScaleDown 0.3s reverse forwards ease-out";
+            desc.style.animation = "yScaleDownDiary 0.3s reverse forwards";
+            tagField.style.animation = "yScaleDownDiary 0.3s reverse forwards ease-out";
             this.view.querySelector(".noteBody").classList.remove("noteBodyFullView");
         }
     }
     Toogle(){
         let desc = this.view.querySelector(".noteDesc");
         let tagField = this.view.querySelector(".noteTagField");
-        if(desc.style.animationName === "yScaleDown" || desc.style.animationName === "")
+        if(desc.style.animationName === "yScaleDownDiary" || desc.style.animationName === "")
         {
             desc.style.display = "initial";
             tagField.style.display = "initial";
-            desc.style.animation = "yScaleUp 0.3s forwards";
-            tagField.style.animation = "yScaleUp 0.3s forwards ease-out";
+            desc.style.animation = "yScaleUpDiary 0.3s forwards";
+            tagField.style.animation = "yScaleUpDiary 0.3s forwards ease-out";
             this.view.querySelector(".noteBody").classList.add("noteBodyFullView");
         }
         else
         {
-            desc.style.animation = "yScaleDown 0.3s reverse forwards";
-            tagField.style.animation = "yScaleDown 0.3s reverse forwards ease-out";
+            desc.style.animation = "yScaleDownDiary 0.3s reverse forwards";
+            tagField.style.animation = "yScaleDownDiary 0.3s reverse forwards ease-out";
             this.view.querySelector(".noteBody").classList.remove("noteBodyFullView");
         }
     }

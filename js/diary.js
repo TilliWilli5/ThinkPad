@@ -1,9 +1,9 @@
 "use strict";
 class Diary extends BaseCtrl
 {
-    constructor(){
-        super();
-        this.view = null;
+    constructor(pCore){
+        super(pCore);
+        // this.view = null;
         this.selectionMask = [];
         this.fullViewIndex = null;
     }
