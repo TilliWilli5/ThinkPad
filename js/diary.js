@@ -3,7 +3,6 @@ class Diary extends BaseCtrl
 {
     constructor(pCore){
         super(pCore);
-        // this.view = null;
         this.selectionMask = [];
         this.fullViewIndex = null;
     }

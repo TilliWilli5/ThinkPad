@@ -2,23 +2,13 @@ class Note extends BaseCtrl
 {
     constructor(pCore){
         super(pCore);
-        // this.view = null;
-        // this.isHidden = true;
         this.isFolded = true;
-        // this.title = pTitle;
-        // this.desc = pDesc;
-        // this.tags = pTags;
-        // if(pCore)
-        //     Object.assign(this, pCore);
     }
     Render(){
         let theView = document.createElement("div");
         this.view = theView;
         theView.ctrl = this;
         theView.className = "note";
-        //Assigning handlers
-        // let eventName = document.body.ontouchstart?"touchstart":"click";
-        // this.AssignHandlers(".noteTitle", eventName, [this.NoteBodyClickHandler]);
         let hammerManager = new Hammer.Manager(this.view, {
             recognizers:[
                 [Hammer.Swipe, {direction:Hammer.DIRECTION_ALL}],
@@ -26,7 +16,6 @@ class Note extends BaseCtrl
             ]
         });
         hammerManager.on("swipe", function(pEvent){
-            // console.log(pEvent);
             let note = util.FindParent(pEvent.target, ".note", true);
             switch(pEvent.direction)
             {
@@ -37,7 +26,6 @@ class Note extends BaseCtrl
             }
         });
         hammerManager.on("tap", function(pEvent){
-            // console.log(pEvent);
             let note = util.FindParent(pEvent.target, ".note", true);
             note.ctrl.Emit("tap", note);
         });

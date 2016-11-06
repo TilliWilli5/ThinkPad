@@ -2,14 +2,7 @@ class ModeIcon extends BaseCtrl
 {
     constructor(pCore){
         super(pCore);
-        // this.view = null;
-        // this.isHidden = true;
     }
-    // AttachTo(pShelter)
-    // {
-    //     this.view = pShelter;
-    //     pShelter.ctrl = this;
-    // }
     Show(pMode){
         if(this.isHidden)
         {

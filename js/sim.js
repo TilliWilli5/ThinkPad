@@ -3,13 +3,10 @@ class SIM extends BaseCtrl
 {
     constructor(pCore){
         super(pCore);
-        // this.view = null;
         this.mode = SIMMode.ZERO;
         this.enviroment = util.DefineEnviroment();//Не оч красивое решение, но на первое время норм
     }
     AttachTo(pView){
-        // pView.ctrl = this;
-        // this.view = pView;
         super.AttachTo(pView);
         this.AssignHandlers("#titleInput", "keydown", [this.TitleBackspaceHandler, this.TitleFirstCharHandler, this.TitleEnterHandler, this.TabHandler]);
         this.AssignHandlers("#descInput", "keydown", [this.DescBackspaceHandler, this.DescEnterHandler, this.TabHandler]);
@@ -18,16 +15,6 @@ class SIM extends BaseCtrl
         this.AssignHandlers("#tagBar", eventName, [this.TagBarClickHandler]);
         this.AssignHandlers("#tagFieldBar", eventName, [this.TagBarClickHandler]);
     }
-    // AssignHandlers(pElementId, pEventName, pHandlerArray){
-        
-    //     for(let iX=0; iX<pHandlerArray.length; ++iX)
-    //     {
-    //         this.view.addEventListener(pEventName, function(pEvent){
-    //             if(pEvent.target.id === pElementId)
-    //                 pHandlerArray[iX].call(this.ctrl, pEvent);
-    //         });
-    //     }
-    // }
     //Inner Methods
     ChangeMode(pMode){
         this.mode = pMode;
@@ -142,10 +129,6 @@ class SIM extends BaseCtrl
                     default : this.ChangeMode(SIMMode.COMP);break;
                 }
             }
-            // else if(pEvent.key === "Backspace" && pEvent.target.innerText === "")
-            // {
-            //     this.ChangeMode(SIMMode.ZERO);
-            // }
         }
     }
     TitleEnterHandler(pEvent){
@@ -210,18 +193,7 @@ class SIM extends BaseCtrl
                     }
 
                 }
-                //Версия для Firefox
-                // if(this.enviroment === UtilEnviroment.FIREFOX && theText[theText.length-1] === "\n")
-                // {
-                //     this.GotoTagInput();
-                //     pEvent.preventDefault();
-                // }
             }
-            // if(pEvent.target.innerText[pEvent.target.innerText.length-1] === "\n" || pEvent.target.innerText === "")
-            // {
-            //     this.GotoTagInput();
-            //     pEvent.preventDefault();
-            // }
         }
     }
     DescBackspaceHandler(pEvent){

@@ -2,18 +2,9 @@ class Bar extends BaseCtrl
 {
     constructor(pCore){
         super(pCore);
-        // this.view = null;
-        // this.isHidden = true;
         this.animDuration = 0.6;
         this.isShowAnimRunning = true;
-        // if(pCore)
-        //     Object.assign(this, pCore);
     }
-    // AttachTo(pShelter)
-    // {
-    //     this.view = pShelter;
-    //     pShelter.ctrl = this;
-    // }
     Show(){
         if(this.isHidden)
         {

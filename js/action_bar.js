@@ -3,11 +3,7 @@ class ActionBar extends BaseCtrl
 {
     constructor(pCore){
         super(pCore);
-        // this.view = null;
-        // this.isHidden = true;
         this.animDuration = 0.3;
-        // if(pCore)
-        //     Object.assign(this, pCore);
     }
     Show(){
         if(this.isHidden)
