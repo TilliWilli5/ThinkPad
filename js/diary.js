@@ -5,12 +5,18 @@ class Diary extends BaseCtrl
         super(pCore);
         this.selectionMask = [];
         this.fullViewIndex = null;
+        this.noteList = null;
+        this.diaryActionBar = null;
+        this.tagHashHeap = {};
+        this.caseSensitiveFilter = false;
     }
     AttachTo(pView){
         pView.ctrl = this;
         this.view = pView;
         let eventName = document.body.ontouchstart?"touchstart":"click";
         this.AssignHandlers("#diaryDeleteBtn", eventName, [this.DiaryDeleteBtnClick]);
+        this.noteList = this.view.querySelector("#noteList");
+        this.diaryActionBar = this.view.querySelector("#diaryActionBar");
     }
     //Inner Methods
     NoteIndex(pNote){
@@ -97,7 +103,138 @@ class Diary extends BaseCtrl
         theNote.On("swipeLeft", this.Delegate("InEventNoteSwipeLeft"));
         theNote.On("swipeRight", this.Delegate("InEventNoteSwipeRight"));
         theNote.On("tap", this.Delegate("InEventNoteTap"));
+        //Для ускорения последующего поиска по тэгам добовляем каждый тэг в хештаблицу
+        for(let tagName of pNoteInfo.tags)
+            this.tagHashHeap[tagName] = true;
         this.view.querySelector("#noteList").appendChild(theNote.Render());
+    }
+    Search(pQueryString){
+        if(pQueryString === "")
+        {
+            for(let note of this.noteList.children)
+                note.ctrl.Show();
+        }
+        else
+        {
+            // let fullTextFilter = "";
+            let tagsFilter = [];
+            let queryParts = pQueryString.split("#");
+            if(pQueryString[0] === "#")
+            {
+                //Простой запрос 1 - поиск осуществляется только по тэгам
+                if(pQueryString === "#")
+                {
+                    // this.Filter(null, null);
+                }
+                else
+                {
+                    for(let tagName of queryParts)
+                        if(tagName !== "" && this.tagHashHeap[tagName.trim()])
+                            tagsFilter.push(tagName.trim());
+                    this.Filter(null, tagsFilter);
+                }
+            }
+            else
+            {
+                if(queryParts.length >=2)
+                {
+                    //Сложный запрос - поиск будет осуществляться как по тексту так и по тэгам
+                    // if(this.tagHashHeap[tagName.trim()])
+                    //     tagsFilter.push(tagName.trim());
+                    // this.Filter(queryParts[0].trim().toLowerCase(), tagsFilter);
+                    alert("Не реализовано");
+                }
+                else
+                {
+                    //Простой запрос 2 - поиск будет осуществлятся по тексту
+                    this.Filter(queryParts[0].trim().toLowerCase(), null);
+                }
+            }
+        }
+    }
+    Filter(pFullTextFilter, pTagsFilter){
+        if(pFullTextFilter === null && pTagsFilter === null)
+        {
+            for(let note of this.noteList.children)
+                    if(note.ctrl.status !== NoteStatus.DELETED)
+                    {
+                        note.ctrl.Show();
+                        note.ctrl.status = NoteStatus.EXIST;
+                    }
+        }
+        else
+        {
+            if(pTagsFilter && pFullTextFilter)
+            {
+                //Фильтр по тэгам и тексту
+                for(let note of this.noteList.children)
+                        if(note.ctrl.status !== NoteStatus.DELETED)
+                            for(let tagName of note.ctrl.tags)
+                                for(let tagFilterName of pTagsFilter)
+                                    if(tagFilterName === tagName)
+                                        if(note.ctrl.title.toLowerCase().indexOf(pFullTextFilter) === -1 && note.ctrl.desc.toLowerCase().indexOf(pFullTextFilter) === -1)
+                                        {
+                                            note.ctrl.Hide();
+                                            note.ctrl.status = NoteStatus.HIDDEN;
+                                        }
+                                        else
+                                        {
+                                            note.ctrl.Show();
+                                            note.ctrl.status = NoteStatus.EXIST;
+                                        }
+            }
+            else
+            {
+                if(pTagsFilter)
+                {
+                    //Фильтр по тэгам
+                    if(pTagsFilter.length === 0)
+                    {
+                        for(let note of this.noteList.children)
+                            if(note.ctrl.status !== NoteStatus.DELETED)
+                            {
+                                note.ctrl.Hide();
+                                note.ctrl.status = NoteStatus.HIDDEN;
+                            }
+
+                    }
+                    else
+                    {
+                        jumpToNextNote:for(let note of this.noteList.children)
+                            if(note.ctrl.status !== NoteStatus.DELETED)
+                                for(let tagName of note.ctrl.tags)
+                                    for(let tagFilterName of pTagsFilter)
+                                        if(tagFilterName === tagName)
+                                        {
+                                            note.ctrl.Show();
+                                            note.ctrl.status = NoteStatus.EXIST;
+                                            continue jumpToNextNote;
+                                        }
+                                        // else
+                                        // {
+                                        //     note.ctrl.Hide();
+                                        //     note.ctrl.status = NoteStatus.HIDDEN;
+                                        // }
+                    }
+                }
+                else
+                {
+                    //Фильтр по тексту
+                    for(let note of this.noteList.children)
+                        if(note.ctrl.status !== NoteStatus.DELETED)
+                            if((note.ctrl.title.toLowerCase().indexOf(pFullTextFilter) === -1) && (note.ctrl.desc.toLowerCase().indexOf(pFullTextFilter) === -1))
+                            {
+                                note.ctrl.Hide();
+                                note.ctrl.status = NoteStatus.HIDDEN;
+                            }
+                            else
+                            {
+                                note.ctrl.Show();
+                                note.ctrl.status = NoteStatus.EXIST;
+                            }
+                }
+            }
+        }
     }
     //Events
     OutEventNoteEdited(pNote){

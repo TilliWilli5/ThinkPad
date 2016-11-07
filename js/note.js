@@ -3,6 +3,7 @@ class Note extends BaseCtrl
     constructor(pCore){
         super(pCore);
         this.isFolded = true;
+        this.isHidden = false;
     }
     Render(){
         let theView = document.createElement("div");
@@ -88,6 +89,13 @@ class Note extends BaseCtrl
             desc.style.animation = "yScaleDownDiary 0.3s reverse forwards";
             tagField.style.animation = "yScaleDownDiary 0.3s reverse forwards ease-out";
             this.view.querySelector(".noteBody").classList.remove("noteBodyFullView");
+        }
+    }
+    Show(){
+        if(this.isHidden)
+        {
+            this.view.style.display = "";
+            this.isHidden = false;
         }
     }
     //Inner Handlers

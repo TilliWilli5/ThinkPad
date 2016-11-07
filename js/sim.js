@@ -9,6 +9,10 @@ class SIM extends BaseCtrl
         this.descInput = null;
         this.tagInput = null;
         this.tagField = null;
+        //Search setup
+        this.searchEventDelay = 100;//ms
+        this.searchEventHandler = null;
+        // this.searchEventTime = Date.now();
     }
     AttachTo(pView){
         super.AttachTo(pView);
@@ -16,6 +20,7 @@ class SIM extends BaseCtrl
         this.descInput = this.view.querySelector("#descInput");
         this.tagInput = this.view.querySelector("#tagInput");
         this.tagField = this.view.querySelector("#tagField");
+        this.AssignHandlers("#titleInput", "keyup", [this.TitleAnyKeyHandler]);
         this.AssignHandlers("#titleInput", "keydown", [this.TitleBackspaceHandler, this.TitleFirstCharHandler, this.TitleEnterHandler, this.TabHandler]);
         this.AssignHandlers("#descInput", "keydown", [this.DescBackspaceHandler, this.DescEnterHandler, this.TabHandler]);
         this.AssignHandlers("#tagInput", "keydown", [this.TagBackspaceHandler, this.TagEnterHandler]);
@@ -152,6 +157,15 @@ class SIM extends BaseCtrl
             pEvent.target.innerHTML = "";
             pEvent.preventDefault();
             this.ChangeMode(SIMMode.ZERO);
+        }
+    }
+    TitleAnyKeyHandler(pEvent){
+        if(this.mode === SIMMode.SEARCH)
+        {
+            // let elapsedTime = Date.now() - this.searchEventTime;
+            // if(elapsedTime < this.searchEventDelay && this.searchEventHandler !== null)
+            window.clearTimeout(this.searchEventHandler)
+            this.searchEventHandler = setTimeout(this.Emit.bind(this, "search", this.titleInput.innerText.trim()), this.searchEventDelay);
         }
     }
     DescEnterHandler(pEvent){

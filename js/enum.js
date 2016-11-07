@@ -29,5 +29,6 @@ const SIMModeToChar = {
 const NoteStatus = {
     NONEXIST:0,
     EXIST:1,
-    DELETED:2
+    DELETED:2,
+    HIDDEN:3
 }
