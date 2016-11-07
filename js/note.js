@@ -42,7 +42,7 @@ class Note extends BaseCtrl
                 theDesc.innerHTML = this.desc;
                 let theTagField = document.createElement("div");
                 theTagField.className = "noteTagField";
-                theTagField.innerHTML = this.tags;
+                theTagField.innerHTML = "#" + this.tags.join(" #");
             theBody.appendChild(theTitle);
             theBody.appendChild(theDesc);
             theBody.appendChild(theTagField);

@@ -5,9 +5,17 @@ class SIM extends BaseCtrl
         super(pCore);
         this.mode = SIMMode.ZERO;
         this.enviroment = util.DefineEnviroment();//Не оч красивое решение, но на первое время норм
+        this.titleInput = null;
+        this.descInput = null;
+        this.tagInput = null;
+        this.tagField = null;
     }
     AttachTo(pView){
         super.AttachTo(pView);
+        this.titleInput = this.view.querySelector("#titleInput");
+        this.descInput = this.view.querySelector("#descInput");
+        this.tagInput = this.view.querySelector("#tagInput");
+        this.tagField = this.view.querySelector("#tagField");
         this.AssignHandlers("#titleInput", "keydown", [this.TitleBackspaceHandler, this.TitleFirstCharHandler, this.TitleEnterHandler, this.TabHandler]);
         this.AssignHandlers("#descInput", "keydown", [this.DescBackspaceHandler, this.DescEnterHandler, this.TabHandler]);
         this.AssignHandlers("#tagInput", "keydown", [this.TagBackspaceHandler, this.TagEnterHandler]);
@@ -64,16 +72,6 @@ class SIM extends BaseCtrl
         // }
         this.FocusTo(this.view.querySelector("#tagInput"));//Фокусировка в Chrome
         this.view.querySelector("#tagInput").focus();//Фокусировка в Firefox
-    }
-    CreateIssue(){
-        alert("Issue: [" + this.view.querySelector("#titleInput").innerText + "] created.");
-        this.Reset();
-    }
-    AddTag(){
-
-    }
-    DeleteTag(){
-
     }
     FocusTo(pElement, pCollapseToStart){
         let wasEmptyInput = false;
@@ -216,7 +214,7 @@ class SIM extends BaseCtrl
         if(pEvent.key === "Enter")
         {
             if(pEvent.target.innerText.trim() === "")
-                this.CreateIssue();
+                this.OutEventNoteCreated();
             else
             {
                 this.view.querySelector("#tagField").appendChild(new Tag(pEvent.target.innerText.trim()).Render());
@@ -241,4 +239,26 @@ class SIM extends BaseCtrl
     }
     //Delegates
     //Events
+    OutEventNoteCreated(){
+        let title = this.titleInput.innerText.trim();
+        let desc = this.descInput.innerText.trim();
+        let tags = [];
+        for(let tag of this.tagField.children)
+            tags.push(tag.firstElementChild.innerText.trim());
+        let ct = util.Time();
+        // tags.push("_ct:" + ct);
+        let id = util.UUID();
+        // tags.push("_uuid:" + uuid);
+        let status = NoteStatus.EXIST;
+        let noteInfo = {
+            title,
+            desc,
+            tags,
+            ct,
+            id,
+            status,
+        };
+        this.Emit("noteCreated", noteInfo);
+        this.Reset();
+    }
 }

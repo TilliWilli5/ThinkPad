@@ -55,3 +55,14 @@ util.FindParent = function(pStartElement, pSelector = "", pInclusive = false){
     };
     return FindRecursively(pStartElement);
 }
+util.UUID = function(pVersion){return pVersion?uuid.v4():uuid.v1();}
+util.Time = function(){
+    let timestamp = new Date();
+    let timezoneOffset = timestamp.getTimezoneOffset();
+    let offsetSign = timezoneOffset > 0 ? "-" : "+";
+    timezoneOffset = Math.abs(timezoneOffset);
+    let hourOffset = ("00" + timezoneOffset/60).slice(-2);
+    let minuteOffset = ("00" + timezoneOffset%60).slice(-2);;
+    timestamp = `${timestamp.toISOString().slice(0, -1)}${offsetSign}${hourOffset}:${minuteOffset}`;
+    return timestamp;
+}

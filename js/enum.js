@@ -1,3 +1,5 @@
+
+// SIM Modes
 const SIMMode = {
     ZERO:0,//Приложение только открыто
     COMP:1,//Написание новой заметки
@@ -21,4 +23,11 @@ const SIMModeToChar = {
     1:".",
     2:"?",
     3:"@"
+}
+
+// Note Status
+const NoteStatus = {
+    NONEXIST:0,
+    EXIST:1,
+    DELETED:2
 }

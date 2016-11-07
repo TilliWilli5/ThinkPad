@@ -23,15 +23,6 @@ class Diary extends BaseCtrl
                 return true;
         return false;
     }
-    Add(pNote){
-        let theNote = new Note(pNote);
-        theNote.On("swipeUp", this.Delegate("InEventNoteSwipeUp"));
-        theNote.On("swipeDown", this.Delegate("InEventNoteSwipeDown"));
-        theNote.On("swipeLeft", this.Delegate("InEventNoteSwipeLeft"));
-        theNote.On("swipeRight", this.Delegate("InEventNoteSwipeRight"));
-        theNote.On("tap", this.Delegate("InEventNoteTap"));
-        this.view.querySelector("#noteList").appendChild(theNote.Render());
-    }
     //Inner Handlers
     DiaryDeleteBtnClick(pEvent){
         let notes = this.view.querySelector("#noteList").children;
@@ -98,6 +89,15 @@ class Diary extends BaseCtrl
             this.view.querySelector("#diaryActionBar").ctrl.Show();
             this.selectionMask[this.NoteIndex(pNote)] = true;
         }
+    }
+    Add(pNoteInfo){
+        let theNote = new Note(pNoteInfo);
+        theNote.On("swipeUp", this.Delegate("InEventNoteSwipeUp"));
+        theNote.On("swipeDown", this.Delegate("InEventNoteSwipeDown"));
+        theNote.On("swipeLeft", this.Delegate("InEventNoteSwipeLeft"));
+        theNote.On("swipeRight", this.Delegate("InEventNoteSwipeRight"));
+        theNote.On("tap", this.Delegate("InEventNoteTap"));
+        this.view.querySelector("#noteList").appendChild(theNote.Render());
     }
     //Events
     OutEventNoteEdited(pNote){
