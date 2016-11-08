@@ -1,3 +1,3 @@
 #ThinkPad#
 
->Motto: As fast as your thoughts
+>As fast as your thoughts
