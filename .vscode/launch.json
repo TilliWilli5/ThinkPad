@@ -5,7 +5,7 @@
             "name": "Launch Chrome against localhost, with sourcemaps",
             "type": "chrome",
             "request": "launch",
-            "url": "file:///C:/xampp/htdocs/ThinkPad/index.html",
+            "url": "file:///C:/xampp/htdocs/ThinkPad/build/index.html",
             "sourceMaps": true,
             "webRoot": "${workspaceRoot}",
             // "userDataDir": "${workspaceRoot}/.vscode/chrome",

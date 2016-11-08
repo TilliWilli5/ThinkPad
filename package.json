@@ -1,0 +1,25 @@
+{
+  "name": "ThinkPad",
+  "version": "1.0.0",
+  "description": ">As fast as your thoughts",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TilliWilli5/ThinkPad.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TilliWilli5/ThinkPad/issues"
+  },
+  "homepage": "https://github.com/TilliWilli5/ThinkPad#readme",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-plugin-transform-async-to-generator": "^6.16.0",
+    "babel-preset-es2015": "^6.18.0"
+  }
+}
