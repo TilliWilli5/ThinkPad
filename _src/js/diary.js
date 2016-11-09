@@ -112,76 +112,53 @@ class Diary extends BaseCtrl
     }
     Filter(pFullTextFilter, pTagMask){
         if(pFullTextFilter === null && pTagMask === null)//QueryType1
-        {
             ;//do nothing
-        }
         else
         {
-            if(pTagMask && pFullTextFilter)
+            if(pTagMask && pFullTextFilter)//QueryType4 - Фильтр по тэгам и тексту
             {
-                //Фильтр по тэгам и тексту
+                if(pTagMask.length === 0)
+                    ;//Do nothing
                 for(let note of this.noteList.children)
-                        if(note.ctrl.status !== NoteStatus.DELETED)
-                            for(let tagName of note.ctrl.tags)
-                                for(let tagFilterName of pTagMask)
-                                    if(tagFilterName === tagName)
-                                        if(note.ctrl.title.toLowerCase().indexOf(pFullTextFilter) === -1 && note.ctrl.desc.toLowerCase().indexOf(pFullTextFilter) === -1)
-                                        {
-                                            note.ctrl.Hide();
-                                            note.ctrl.status = NoteStatus.HIDDEN;
-                                        }
-                                        else
-                                        {
-                                            note.ctrl.Show();
-                                            note.ctrl.status = NoteStatus.EXIST;
-                                        }
+                {
+                    if(note.ctrl.status === NoteStatus.DELETED)
+                        continue;
+                    if(note.ctrl.HasTags(pTagMask, this.caseSensitiveSearch))
+                    {
+                        if(note.ctrl.HasText(pFullTextFilter, this.caseSensitiveSearch))
+                            note.ctrl.Show();
+                        else
+                            note.ctrl.Hide();
+                    }
+                    else
+                        note.ctrl.Hide();
+                }
             }
             else
             {
                 if(pTagMask)//QueryType2 - поиск по тегам
                 {
                     if(pTagMask.length === 0)
-                    {
-                        //Do nothing
-                    }
+                        ;//Do nothing
                     else
-                    {
                         for(let note of this.noteList.children)
                         {
                             if(note.ctrl.status === NoteStatus.DELETED)
                                 continue;
-                            let maskPassed = false;
-                            let maskTagCounter = 0;
-                            for(let noteTag of note.ctrl.tags)
-                            {
-                                for(let maskTag of pTagMask)
-                                    if(maskTag === noteTag)
-                                        ++maskTagCounter;
-                            }
-                            if(maskTagCounter === pTagMask.length)
-                                maskPassed = true;
-                            if(maskPassed)
+                            if(note.ctrl.HasTags(pTagMask, this.caseSensitiveSearch))
                                 note.ctrl.Show();
                             else
                                 note.ctrl.Hide();
                         }
-                    }
                 }
-                else
+                else//QueryType3 - Фильтр по тексту
                 {
-                    //Фильтр по тексту
                     for(let note of this.noteList.children)
                         if(note.ctrl.status !== NoteStatus.DELETED)
-                            if((note.ctrl.title.toLowerCase().indexOf(pFullTextFilter) === -1) && (note.ctrl.desc.toLowerCase().indexOf(pFullTextFilter) === -1))
-                            {
-                                note.ctrl.Hide();
-                                note.ctrl.status = NoteStatus.HIDDEN;
-                            }
-                            else
-                            {
+                            if(note.ctrl.HasText(pFullTextFilter))
                                 note.ctrl.Show();
-                                note.ctrl.status = NoteStatus.EXIST;
-                            }
+                            else
+                                note.ctrl.Hide();
                 }
             }
         }

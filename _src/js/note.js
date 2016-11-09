@@ -108,6 +108,40 @@ class Note extends BaseCtrl
         }
 
     }
+    HasText(pText, pCaseSensitive = false){
+        let title = pCaseSensitive?this.title:this.title.toLowerCase();
+        let desc = pCaseSensitive?this.desc:this.desc.toLowerCase();
+        let text = pCaseSensitive?pText:pText.toLowerCase();
+        if(title.indexOf(text) === -1 && desc.toLowerCase().indexOf(text) === -1)
+            return false;
+        else
+            return true;
+    }
+    HasTags(pTags, pCaseSensitive = false)
+    {
+        if(pTags.length === 0)
+            return true;
+        else
+        {
+            let maskTagCounter = 0;
+            for(let noteTag of this.tags)
+                for(let maskTag of pTags)
+                    if(pCaseSensitive)
+                    {
+                        if(maskTag === noteTag)
+                            ++maskTagCounter;
+                    }
+                    else
+                    {
+                        if(maskTag.toLowerCase() === noteTag.toLowerCase())
+                            ++maskTagCounter;
+                    }
+            if(maskTagCounter === pTags.length)
+                return true;
+            else
+                return false;
+        }
+    }
     //Inner Handlers
     NoteBodyClickHandler(pEvent){
         util.FindParent(pEvent.target, ".note").ctrl.Expand();
