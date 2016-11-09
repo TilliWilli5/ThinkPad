@@ -6,6 +6,7 @@
         "**/.hg": true,
         "**/.DS_Store": true,
         "build/*/**.map": true,
+        "build/**.map": true,
         "node_modules": true
     }
 }

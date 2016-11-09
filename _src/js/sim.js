@@ -37,15 +37,19 @@ class SIM extends BaseCtrl
             case SIMMode.ZERO:{
                 this.view.querySelector("#modeIcon").ctrl.Hide();
                 this.view.querySelector("#titleLabel").ctrl.Hide();
+                this.OutModeChange(this.mode);
             };break;
             case SIMMode.COMP:{
                 this.view.querySelector("#titleLabel").ctrl.Show();
+                this.OutModeChange(this.mode);
             };break;
             case SIMMode.SEARCH:{
                 this.view.querySelector("#modeIcon").ctrl.ChangeMode(SIMMode.SEARCH);
+                this.OutModeChange(this.mode);
             };break;
             case SIMMode.SYNC:{
                 this.view.querySelector("#modeIcon").ctrl.ChangeMode(SIMMode.SYNC);
+                this.OutModeChange(this.mode);
             };break;
         }
     }
@@ -274,5 +278,8 @@ class SIM extends BaseCtrl
         };
         this.Emit("noteCreated", noteInfo);
         this.Reset();
+    }
+    OutModeChange(pMode){
+        this.Emit("modeChanged", pMode);
     }
 }

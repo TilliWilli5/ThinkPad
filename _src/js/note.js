@@ -96,7 +96,17 @@ class Note extends BaseCtrl
         {
             this.view.style.display = "";
             this.isHidden = false;
+            this.status = NoteStatus.EXIST;
         }
+    }
+    Hide(){
+        if(this.isHidden === false)
+        {
+            this.view.style.display = "none";
+            this.isHidden = true;
+            this.status = NoteStatus.HIDDEN;
+        }
+
     }
     //Inner Handlers
     NoteBodyClickHandler(pEvent){

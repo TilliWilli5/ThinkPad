@@ -35,8 +35,9 @@ var app = (()=>{
     new ActionBar().AttachTo($.actionBar);
 
     //Настраиваем связь между компонентами
-    $.simCtrl.On("noteCreated", $.diaryCtrl.Delegate("Add"));
-    $.simCtrl.On("search", $.diaryCtrl.Delegate("Search"));
+    $.simCtrl.On("modeChanged", $.diaryCtrl.Delegate("OnModeChanged"));
+    $.simCtrl.On("noteCreated", $.diaryCtrl.Delegate("OnNoteCreated"));
+    $.simCtrl.On("search", $.diaryCtrl.Delegate("OnSearch"));
     //Забиваем стартовыми нотсами этот бренный мир
     $.diaryCtrl.Add({title:"Note1",desc:"Description here",tags:["tag1", "tag2", "tag3", "note"], status:1});
     $.diaryCtrl.Add({title:"Idea 2",desc:"This is the Great idea description",tags:["idea", "great", "cool", "awesome", "good", "ok", "nice"], status:1});

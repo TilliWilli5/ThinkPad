@@ -8,7 +8,7 @@ class Diary extends BaseCtrl
         this.noteList = null;
         this.diaryActionBar = null;
         this.tagHashHeap = {};
-        this.caseSensitiveFilter = false;
+        this.caseSensitiveSearch = false;
     }
     AttachTo(pView){
         pView.ctrl = this;
@@ -28,6 +28,163 @@ class Diary extends BaseCtrl
             if(status)
                 return true;
         return false;
+    }
+    Add(pNoteSource){
+        let theNote = new Note(pNoteSource);
+        theNote.On("swipeUp", this.Delegate("InEventNoteSwipeUp"));
+        theNote.On("swipeDown", this.Delegate("InEventNoteSwipeDown"));
+        theNote.On("swipeLeft", this.Delegate("InEventNoteSwipeLeft"));
+        theNote.On("swipeRight", this.Delegate("InEventNoteSwipeRight"));
+        theNote.On("tap", this.Delegate("InEventNoteTap"));
+        //Для ускорения последующего поиска по тэгам добовляем каждый тэг в хештаблицу
+        for(let tagName of pNoteSource.tags)
+            this.tagHashHeap[tagName] = true;
+        this.view.querySelector("#noteList").appendChild(theNote.Render());
+    }
+    HideAllNotes(){
+        for(let note of this.noteList.children)
+            note.ctrl.Hide();
+    }
+    ShowAllNotes(){
+        // for(let note of this.noteList.children)
+        //     note.ctrl.Show();
+        for(let note of this.noteList.children)
+            if(note.ctrl.status !== NoteStatus.DELETED)
+            {
+                note.ctrl.Show();
+                note.ctrl.status = NoteStatus.EXIST;
+            }
+    }
+    PrepareSearch(pQuery){
+        let fullTextSearch = null;
+        let tagMask = null;
+        let _result = ()=>{return {fullTextSearch, tagMask};};
+        if(pQuery === "")//QueryType1
+            return _result();
+        let queryParts = pQuery.split("#");
+        if(pQuery[0] === "#")//Поиск осуществляется только по тэгам
+        {
+            //Еще не успели ввести тело тэга - необходимо скрыть все записи. Возможно даже раньше как только мы входим в режим поиска (SIM)
+            if(pQuery === "#")//QueryType1
+                return _result();
+            else//QueryType2
+            {
+                tagMask = [];
+                for(let tagName of queryParts)
+                {
+                    tagName = tagName.trim();
+                    if(!this.caseSensitiveSearch)
+                        tagName = tagName.toLowerCase();
+                    //Отсеиваем тэги кых нет в хаштаблице и пустые тэги. Тэги не попавшие в хеш таблицу точно не пресутствуют не в одной из записей - нет необходимости в их дальнейшем процессинге
+                    //if(tagName && this.tagHashHeap[tagName])
+                    if(tagName)
+                        tagMask.push(tagName);
+                }
+            }
+        }
+        else
+        {
+            if(queryParts.length === 1)//QueryType3 - поиск будет осуществлятся по тексту
+            {
+                fullTextSearch = queryParts[0].trim();
+                    if(!this.caseSensitiveSearch)
+                        fullTextSearch = fullTextSearch.toLowerCase();
+            }
+            else//QueryType4 - поиск будет осуществляться как по тексту так и по тэгам
+            {
+                fullTextSearch = queryParts[0].trim();
+                    if(!this.caseSensitiveSearch)
+                        fullTextSearch = fullTextSearch.toLowerCase();
+                tagMask = [];
+                //Начинаем с индекса 1 потому что 0 индекс это fullTextSearch
+                for(let iX=1;iX<queryParts.length;++iX)
+                {
+                    let tagName = queryParts[iX].trim();
+                    if(!this.caseSensitiveSearch)
+                        tagName = tagName.toLowerCase();
+                    //Отсеиваем тэги кых нет в хаштаблице и пустые тэги. Тэги не попавшие в хеш таблицу точно не пресутствуют не в одной из записей - нет необходимости в их дальнейшем процессинге
+                    if(tagName)
+                        tagMask.push(tagName);
+                }
+            }
+        }
+        return _result();
+    }
+    Filter(pFullTextFilter, pTagMask){
+        if(pFullTextFilter === null && pTagMask === null)//QueryType1
+        {
+            ;//do nothing
+        }
+        else
+        {
+            if(pTagMask && pFullTextFilter)
+            {
+                //Фильтр по тэгам и тексту
+                for(let note of this.noteList.children)
+                        if(note.ctrl.status !== NoteStatus.DELETED)
+                            for(let tagName of note.ctrl.tags)
+                                for(let tagFilterName of pTagMask)
+                                    if(tagFilterName === tagName)
+                                        if(note.ctrl.title.toLowerCase().indexOf(pFullTextFilter) === -1 && note.ctrl.desc.toLowerCase().indexOf(pFullTextFilter) === -1)
+                                        {
+                                            note.ctrl.Hide();
+                                            note.ctrl.status = NoteStatus.HIDDEN;
+                                        }
+                                        else
+                                        {
+                                            note.ctrl.Show();
+                                            note.ctrl.status = NoteStatus.EXIST;
+                                        }
+            }
+            else
+            {
+                if(pTagMask)//QueryType2 - поиск по тегам
+                {
+                    if(pTagMask.length === 0)
+                    {
+                        //Do nothing
+                    }
+                    else
+                    {
+                        for(let note of this.noteList.children)
+                        {
+                            if(note.ctrl.status === NoteStatus.DELETED)
+                                continue;
+                            let maskPassed = false;
+                            let maskTagCounter = 0;
+                            for(let noteTag of note.ctrl.tags)
+                            {
+                                for(let maskTag of pTagMask)
+                                    if(maskTag === noteTag)
+                                        ++maskTagCounter;
+                            }
+                            if(maskTagCounter === pTagMask.length)
+                                maskPassed = true;
+                            if(maskPassed)
+                                note.ctrl.Show();
+                            else
+                                note.ctrl.Hide();
+                        }
+                    }
+                }
+                else
+                {
+                    //Фильтр по тексту
+                    for(let note of this.noteList.children)
+                        if(note.ctrl.status !== NoteStatus.DELETED)
+                            if((note.ctrl.title.toLowerCase().indexOf(pFullTextFilter) === -1) && (note.ctrl.desc.toLowerCase().indexOf(pFullTextFilter) === -1))
+                            {
+                                note.ctrl.Hide();
+                                note.ctrl.status = NoteStatus.HIDDEN;
+                            }
+                            else
+                            {
+                                note.ctrl.Show();
+                                note.ctrl.status = NoteStatus.EXIST;
+                            }
+                }
+            }
+        }
     }
     //Inner Handlers
     DiaryDeleteBtnClick(pEvent){
@@ -96,144 +253,18 @@ class Diary extends BaseCtrl
             this.selectionMask[this.NoteIndex(pNote)] = true;
         }
     }
-    Add(pNoteInfo){
-        let theNote = new Note(pNoteInfo);
-        theNote.On("swipeUp", this.Delegate("InEventNoteSwipeUp"));
-        theNote.On("swipeDown", this.Delegate("InEventNoteSwipeDown"));
-        theNote.On("swipeLeft", this.Delegate("InEventNoteSwipeLeft"));
-        theNote.On("swipeRight", this.Delegate("InEventNoteSwipeRight"));
-        theNote.On("tap", this.Delegate("InEventNoteTap"));
-        //Для ускорения последующего поиска по тэгам добовляем каждый тэг в хештаблицу
-        for(let tagName of pNoteInfo.tags)
-            this.tagHashHeap[tagName] = true;
-        this.view.querySelector("#noteList").appendChild(theNote.Render());
+    OnNoteCreated(pNoteSource){
+        this.Add(pNoteSource);
     }
-    Search(pQueryString){
-        if(pQueryString === "")
-        {
-            for(let note of this.noteList.children)
-                note.ctrl.Show();
-        }
-        else
-        {
-            // let fullTextFilter = "";
-            let tagsFilter = [];
-            let queryParts = pQueryString.split("#");
-            if(pQueryString[0] === "#")
-            {
-                //Простой запрос 1 - поиск осуществляется только по тэгам
-                if(pQueryString === "#")
-                {
-                    // this.Filter(null, null);
-                }
-                else
-                {
-                    for(let tagName of queryParts)
-                        if(tagName !== "" && this.tagHashHeap[tagName.trim()])
-                            tagsFilter.push(tagName.trim());
-                    this.Filter(null, tagsFilter);
-                }
-            }
-            else
-            {
-                if(queryParts.length >=2)
-                {
-                    //Сложный запрос - поиск будет осуществляться как по тексту так и по тэгам
-                    // if(this.tagHashHeap[tagName.trim()])
-                    //     tagsFilter.push(tagName.trim());
-                    // this.Filter(queryParts[0].trim().toLowerCase(), tagsFilter);
-                    alert("Не реализовано");
-                }
-                else
-                {
-                    //Простой запрос 2 - поиск будет осуществлятся по тексту
-                    this.Filter(queryParts[0].trim().toLowerCase(), null);
-                }
-            }
-        }
+    OnSearch(pQuery){
+        let searchInfo = this.PrepareSearch(pQuery);
+        this.Filter(searchInfo.fullTextSearch, searchInfo.tagMask);
     }
-    Filter(pFullTextFilter, pTagsFilter){
-        if(pFullTextFilter === null && pTagsFilter === null)
+    OnModeChanged(pMode){
+        switch(pMode)
         {
-            for(let note of this.noteList.children)
-                    if(note.ctrl.status !== NoteStatus.DELETED)
-                    {
-                        note.ctrl.Show();
-                        note.ctrl.status = NoteStatus.EXIST;
-                    }
-        }
-        else
-        {
-            if(pTagsFilter && pFullTextFilter)
-            {
-                //Фильтр по тэгам и тексту
-                for(let note of this.noteList.children)
-                        if(note.ctrl.status !== NoteStatus.DELETED)
-                            for(let tagName of note.ctrl.tags)
-                                for(let tagFilterName of pTagsFilter)
-                                    if(tagFilterName === tagName)
-                                        if(note.ctrl.title.toLowerCase().indexOf(pFullTextFilter) === -1 && note.ctrl.desc.toLowerCase().indexOf(pFullTextFilter) === -1)
-                                        {
-                                            note.ctrl.Hide();
-                                            note.ctrl.status = NoteStatus.HIDDEN;
-                                        }
-                                        else
-                                        {
-                                            note.ctrl.Show();
-                                            note.ctrl.status = NoteStatus.EXIST;
-                                        }
-            }
-            else
-            {
-                if(pTagsFilter)
-                {
-                    //Фильтр по тэгам
-                    if(pTagsFilter.length === 0)
-                    {
-                        for(let note of this.noteList.children)
-                            if(note.ctrl.status !== NoteStatus.DELETED)
-                            {
-                                note.ctrl.Hide();
-                                note.ctrl.status = NoteStatus.HIDDEN;
-                            }
-
-                    }
-                    else
-                    {
-                        jumpToNextNote:for(let note of this.noteList.children)
-                            if(note.ctrl.status !== NoteStatus.DELETED)
-                                for(let tagName of note.ctrl.tags)
-                                    for(let tagFilterName of pTagsFilter)
-                                        if(tagFilterName === tagName)
-                                        {
-                                            note.ctrl.Show();
-                                            note.ctrl.status = NoteStatus.EXIST;
-                                            continue jumpToNextNote;
-                                        }
-                                        // else
-                                        // {
-                                        //     note.ctrl.Hide();
-                                        //     note.ctrl.status = NoteStatus.HIDDEN;
-                                        // }
-                    }
-                }
-                else
-                {
-                    //Фильтр по тексту
-                    for(let note of this.noteList.children)
-                        if(note.ctrl.status !== NoteStatus.DELETED)
-                            if((note.ctrl.title.toLowerCase().indexOf(pFullTextFilter) === -1) && (note.ctrl.desc.toLowerCase().indexOf(pFullTextFilter) === -1))
-                            {
-                                note.ctrl.Hide();
-                                note.ctrl.status = NoteStatus.HIDDEN;
-                            }
-                            else
-                            {
-                                note.ctrl.Show();
-                                note.ctrl.status = NoteStatus.EXIST;
-                            }
-                }
-            }
+            // case SIMMode.SEARCH: this.HideAllNotes();break;
+            case SIMMode.ZERO: this.ShowAllNotes();break;
         }
     }
     //Events
