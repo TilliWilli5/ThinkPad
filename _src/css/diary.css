@@ -109,15 +109,15 @@ body
         .noteDesc
         {
             display:none;
-            max-height: 0;
-            overflow: hidden;
+            /*max-height: 0;*/
+            /*overflow: hidden;*/
             margin-left:8px;
         }
         .noteTagField
         {
             display:none;
-            max-height: 0;
-            overflow: hidden;
+            /*max-height: 0;*/
+            /*overflow: hidden;*/
             margin-left:8px;
         }
 /*
