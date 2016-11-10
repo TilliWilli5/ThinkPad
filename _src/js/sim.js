@@ -20,8 +20,9 @@ class SIM extends BaseCtrl
         this.descInput = this.view.querySelector("#descInput");
         this.tagInput = this.view.querySelector("#tagInput");
         this.tagField = this.view.querySelector("#tagField");
+        this.AssignHandlers("#titleInput", "input", [this.TitleFirstCharHandler]);
         this.AssignHandlers("#titleInput", "keyup", [this.TitleAnyKeyHandler]);
-        this.AssignHandlers("#titleInput", "keydown", [this.TitleBackspaceHandler, this.TitleFirstCharHandler, this.TitleEnterHandler, this.TabHandler]);
+        this.AssignHandlers("#titleInput", "keydown", [this.TitleBackspaceHandler, this.TitleEnterHandler, this.TabHandler]);
         this.AssignHandlers("#descInput", "keydown", [this.DescBackspaceHandler, this.DescEnterHandler, this.TabHandler]);
         this.AssignHandlers("#tagInput", "keydown", [this.TagBackspaceHandler, this.TagEnterHandler]);
         let eventName = document.body.ontouchstart?"touchstart":"click";
@@ -122,19 +123,16 @@ class SIM extends BaseCtrl
     }
     //Inner Handlers
     TitleFirstCharHandler(pEvent){
-        if(pEvent.target.id === "titleInput")
+        if(this.mode === SIMMode.ZERO)
         {
-            if(this.mode === SIMMode.ZERO)
+            let inputText = pEvent.target.innerText.trim();
+            if( inputText === "")
+                return;
+            switch(inputText[0])
             {
-                //Фильтруем некоторые значения
-                if(pEvent.key === "Shift" || pEvent.key === "Alt" || pEvent.key === "Backspace" || pEvent.key === "Enter" || pEvent.key === "Tab")
-                    return;
-                switch(pEvent.key)
-                {
-                    case "?": this.ChangeMode(SIMMode.SEARCH);pEvent.preventDefault();break;
-                    case "@": this.ChangeMode(SIMMode.SYNC);pEvent.preventDefault();break;
-                    default : this.ChangeMode(SIMMode.COMP);break;
-                }
+                case "?": this.ChangeMode(SIMMode.SEARCH);pEvent.target.innerHTML="";break;
+                case "@": this.ChangeMode(SIMMode.SYNC);pEvent.target.innerHTML="";break;
+                default : this.ChangeMode(SIMMode.COMP);break;
             }
         }
     }
@@ -245,10 +243,13 @@ class SIM extends BaseCtrl
         if(pEvent.key === "Tab")
         {
             pEvent.preventDefault();
-            if(pEvent.target.id === "titleInput")
-                this.GotoDescInput();
-            if(pEvent.target.id === "descInput")
-                this.GotoTagInput();
+            if(this.mode === SIMMode.COMP)
+            {
+                if(pEvent.target.id === "titleInput")
+                    this.GotoDescInput();
+                if(pEvent.target.id === "descInput")
+                    this.GotoTagInput();
+            }
         }
     }
     TagBarClickHandler(pEvent){

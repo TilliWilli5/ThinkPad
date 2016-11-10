@@ -11,6 +11,7 @@
             "webRoot": "${workspaceRoot}",
             // "userDataDir": "${workspaceRoot}/.vscode/chrome",
             "runtimeArgs":["--remote-debugging-port=9222"]
+            // "userDataDir":"${workspaceRoot}/.vscode/chrome_temp"
         },
         {
             "name": "Attach to Chrome, with sourcemaps",
