@@ -283,21 +283,16 @@ class SIM extends BaseCtrl
     TagEnterHandler(pEvent){
         if(pEvent.key === "Enter")
         {
-            switch(this.mode)
+            if(pEvent.target.innerText.trim() === "")
+                switch(this.mode)
+                {
+                    case SIMMode.COMP:this.OutEventNoteCreated();this.ChangeMode(SIMMode.ZERO);break;
+                    case SIMMode.EDIT:this.OutEditSubmitted();this.ChangeMode(SIMMode.ZERO);break;
+                }
+            else
             {
-                case SIMMode.COMP:{
-                    if(pEvent.target.innerText.trim() === "")
-                        this.OutEventNoteCreated();
-                    else
-                    {
-                        this.view.querySelector("#tagField").appendChild(new Tag(pEvent.target.innerText.trim()).Render());
-                        pEvent.target.innerHTML = "&nbsp;";
-                    }
-                };break;
-                case SIMMode.EDIT:{
-                    this.OutEditSubmitted();
-                    this.ChangeMode(SIMMode.ZERO);
-                };break;
+                this.view.querySelector("#tagField").appendChild(new Tag(pEvent.target.innerText.trim()).Render());
+                pEvent.target.innerHTML = "&nbsp;";
             }
             pEvent.preventDefault();
         }
