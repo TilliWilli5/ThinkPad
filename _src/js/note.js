@@ -4,6 +4,15 @@ class Note extends BaseCtrl
         super(pCore);
         this.isFolded = true;
         this.isHidden = false;
+        this.noteHandle = null
+        this.noteBody = null
+        this.noteTitle = null
+        this.noteDesc = null
+        this.noteTagField = null
+        //Присоединяем метаданные
+        this.ct = util.Time();
+        this.id = util.UUID();
+        this.status = NoteStatus.EXIST;
     }
     Render(){
         let theView = document.createElement("div");
@@ -31,17 +40,22 @@ class Note extends BaseCtrl
             note.ctrl.Emit("tap", note);
         });
             let theHandle = document.createElement("div");
+            this.noteHandle = theHandle;
             theHandle.className = "noteHandle";
         theView.appendChild(theHandle);
             let theBody = document.createElement("div");
+            this.noteBody = theBody;
             theBody.className = "noteBody";
                 let theTitle = document.createElement("div");
+                this.noteTitle = theTitle;
                 theTitle.className = "noteTitle";
                 theTitle.innerHTML = this.title;
                 let theDesc = document.createElement("div");
+                this.noteDesc = theDesc;
                 theDesc.className = "noteDesc";
                 theDesc.innerHTML = this.desc;
                 let theTagField = document.createElement("div");
+                this.noteTagField = theTagField;
                 theTagField.className = "noteTagField";
                 theTagField.innerHTML = "#" + this.tags.join(" #");
             theBody.appendChild(theTitle);
@@ -49,6 +63,13 @@ class Note extends BaseCtrl
             theBody.appendChild(theTagField);
         theView.appendChild(theBody);
         return theView;
+    }
+    ReplaceContent(pNoteSource){
+        this.title = this.noteTitle.innerHTML = pNoteSource.title;
+        this.desc = this.noteDesc.innerHTML = pNoteSource.desc;
+        this.tags = pNoteSource.tags;
+        this.noteTagField.innerHTML = "#" + this.tags.join(" #");
+        return this;
     }
     //Inner Methods
     Expand(){
@@ -70,6 +91,17 @@ class Note extends BaseCtrl
         {
             desc.style.animation = "yScaleDownDiary 0.3s reverse forwards";
             tagField.style.animation = "yScaleDownDiary 0.3s reverse forwards ease-out";
+            this.view.querySelector(".noteBody").classList.remove("noteBodyFullView");
+        }
+    }
+    InstaFold(){
+    //Для случая когда мы делаем поисковый запрос - необходимо моментально сворачивать запись кая отсеивается - иначе потом при появлении она будет проигрывать анимацию скрывания - выглядит как глюк 
+        let desc = this.view.querySelector(".noteDesc");
+        let tagField = this.view.querySelector(".noteTagField");
+        if(desc.style.animationName === "yScaleUpDiary")
+        {
+            desc.style.animation = "yScaleDownDiary 0s reverse forwards";
+            tagField.style.animation = "yScaleDownDiary 0s reverse forwards ease-out";
             this.view.querySelector(".noteBody").classList.remove("noteBodyFullView");
         }
     }
@@ -102,6 +134,7 @@ class Note extends BaseCtrl
     Hide(){
         if(this.isHidden === false)
         {
+            this.InstaFold();
             this.view.style.display = "none";
             this.isHidden = true;
             this.status = NoteStatus.HIDDEN;

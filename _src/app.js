@@ -38,12 +38,14 @@ var app = (()=>{
     $.simCtrl.On("modeChanged", $.diaryCtrl.Delegate("OnModeChanged"));
     $.simCtrl.On("noteCreated", $.diaryCtrl.Delegate("OnNoteCreated"));
     $.simCtrl.On("search", $.diaryCtrl.Delegate("OnSearch"));
+    $.simCtrl.On("editSubmitted", $.diaryCtrl.Delegate("OnEditSubmitted"));
+    $.simCtrl.On("editRejected", $.diaryCtrl.Delegate("OnEditRejected"));
     //Забиваем стартовыми нотсами этот бренный мир
-    $.diaryCtrl.Add({title:"Note1",desc:"Description here",tags:["tag1", "tag2", "tag3", "note"], status:1});
-    $.diaryCtrl.Add({title:"Idea 2",desc:"This is the Great idea description",tags:["idea", "great", "cool", "awesome", "good", "ok", "nice"], status:1});
-    $.diaryCtrl.Add({title:"Thought 3",desc:"Its very deep thought",tags:["thought", "deep", "56"], status:1});
-    $.diaryCtrl.Add({title:"Poker Trick",desc:"Never tilt",tags:["poker", "tactic", "tilt", "general strategy"], status:1});
-    
+    $.diaryCtrl.AddNote({title:"Note1",desc:"Description here",tags:["tag1", "tag2", "tag3", "note"], status:1});
+    $.diaryCtrl.AddNote({title:"Idea 2",desc:"This is the Great idea description",tags:["idea", "great", "cool", "awesome", "good", "ok", "nice"], status:1});
+    $.diaryCtrl.AddNote({title:"Thought 3",desc:"Its very deep thought",tags:["thought", "deep", "56"], status:1});
+    $.diaryCtrl.AddNote({title:"Poker Trick",desc:"Never tilt",tags:["poker", "tactic", "tilt", "general strategy"], status:1});
+    $.diaryCtrl.On("noteEdited", $.simCtrl.Delegate("OnNoteEdited"));
 
     //Последняя строка
     return $;

@@ -37,6 +37,21 @@ body
             height:100%;
             pointer-events: none;
         }
+        .note.editMode
+        {
+            border:2px solid #FFDC61;
+        }
+        .note.editMode::before
+        {
+            content:"";
+            position:absolute;
+            border-bottom:0px solid lightgrey;
+            border-image: linear-gradient(to right, lightgrey, rgba(0,0,0,0));
+            border-image-slice: 1;
+            width:100%;
+            height:100%;
+            pointer-events: none;
+        }
     .noteHandle
     {
         display:none;
@@ -159,5 +174,16 @@ Footer part
             color:white;
             border-color:indianred;
             color:indianred;
-
+        }
+        #diaryCopyBtn:hover
+        {
+            color:white;
+            border-color:seagreen;
+            color:seagreen;
+        }
+        #diaryEditBtn:hover
+        {
+            color:white;
+            border-color:#FFDC61;
+            color:#FFDC61;
         }

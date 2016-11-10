@@ -15,6 +15,7 @@ class Diary extends BaseCtrl
         this.view = pView;
         let eventName = document.body.ontouchstart?"touchstart":"click";
         this.AssignHandlers("#diaryDeleteBtn", eventName, [this.DiaryDeleteBtnClick]);
+        this.AssignHandlers("#diaryEditBtn", eventName, [this.DiaryEditBtnClick]);
         this.noteList = this.view.querySelector("#noteList");
         this.diaryActionBar = this.view.querySelector("#diaryActionBar");
     }
@@ -29,7 +30,19 @@ class Diary extends BaseCtrl
                 return true;
         return false;
     }
-    Add(pNoteSource){
+    FirstSelectedIndex(){
+        for(let iX=0;iX<this.selectionMask.length;++iX)
+            if(this.selectionMask[iX])
+                return iX;
+        return null;
+    }
+    FindNote(pNoteID){
+        for(let note of this.noteList.children)
+            if(note.ctrl.id === pNoteID)
+                return note;
+        return null;
+    }
+    AddNote(pNoteSource){
         let theNote = new Note(pNoteSource);
         theNote.On("swipeUp", this.Delegate("InEventNoteSwipeUp"));
         theNote.On("swipeDown", this.Delegate("InEventNoteSwipeDown"));
@@ -54,6 +67,27 @@ class Diary extends BaseCtrl
                 note.ctrl.Show();
                 note.ctrl.status = NoteStatus.EXIST;
             }
+    }
+    FoldAllNotes(){
+        if(this.fullViewIndex !== null)
+        {
+            this.noteList.children[this.fullViewIndex].ctrl.Fold();
+            this.fullViewIndex = null;
+        }
+    }
+    ExpandAllNotes(){
+        for(let note of this.noteList.children)
+            if(note.ctrl.status !== NoteStatus.DELETED)
+                note.ctrl.Expand();
+    }
+    ClearSelection(){
+        for(let iX in this.selectionMask)
+            if(this.selectionMask[iX])
+            {
+                this.noteList.children[iX].querySelector(".noteHandle").style.display = "none";//Эту строчку можно выполнить в контроллере Note
+                this.selectionMask[iX] = false;
+            }
+        this.view.querySelector("#diaryActionBar").ctrl.Hide();
     }
     PrepareSearch(pQuery){
         let fullTextSearch = null;
@@ -176,6 +210,10 @@ class Diary extends BaseCtrl
             }
         this.view.querySelector("#diaryActionBar").ctrl.Hide();
     }
+    DiaryEditBtnClick(pEvent){
+        let noteIndex = this.FirstSelectedIndex();
+        this.OutEventNoteEdited(this.noteList.children[noteIndex]);
+    }
     //Delegates
     InEventNoteSwipeUp(pNote){
         //Если запись открыта то закрыть иначе отправить на редактирование
@@ -208,11 +246,10 @@ class Diary extends BaseCtrl
         }
     }
     InEventNoteSwipeLeft(pNote){
-        // console.log(pNote);
+        console.log("InEventNoteSwipeLeft");
     }
     InEventNoteSwipeRight(pNote){
-        console.log(pNote);
-        // this.OutEventNoteSelected(pNote);
+        console.log("InEventNoteSwipeRight");
     }
     InEventNoteTap(pNote){
         //Проверяем уже выделена запись или нет
@@ -231,7 +268,7 @@ class Diary extends BaseCtrl
         }
     }
     OnNoteCreated(pNoteSource){
-        this.Add(pNoteSource);
+        this.AddNote(pNoteSource);
     }
     OnSearch(pQuery){
         let searchInfo = this.PrepareSearch(pQuery);
@@ -240,17 +277,34 @@ class Diary extends BaseCtrl
     OnModeChanged(pMode){
         switch(pMode)
         {
-            // case SIMMode.SEARCH: this.HideAllNotes();break;
+            case SIMMode.SEARCH: this.HideAllNotes();break;
             case SIMMode.ZERO: this.ShowAllNotes();break;
+            // case SIMMode.SEARCH: this.FoldAllNotes();break;
         }
     }
     //Events
     OutEventNoteEdited(pNote){
-        let noteIndex = this.NoteIndex(pNote);
-        let title = pNote.querySelector(".noteTitle").innerText;
-        let desc = pNote.querySelector(".noteDesc").innerText;
-        let tagField = pNote.querySelector(".noteTagField").innerText.split("#").splice(1);
-        let noteInfo = {title, desc, tagField, noteIndex};
-        this.Emit("noteEdited", noteInfo);
+        //Убираем editMode выделение со всех записей. Переписать грамотно
+        for(let note of this.noteList.children)
+            note.classList.remove("editMode");
+        this.ClearSelection();
+        // this.InEventNoteTap(pNote);
+        // pNote.ctrl.Fold();
+        this.FoldAllNotes();
+        pNote.classList.add("editMode");
+        this.Emit("noteEdited", pNote);
+    }
+    OnEditSubmitted(pNoteInfo){
+        let theNote = this.FindNote(pNoteInfo.id);
+        if(theNote)
+        {
+            theNote.classList.remove("editMode");
+            // this.FoldAllNotes();//Сворачиваем все записи кые могут быть открыты
+            theNote.ctrl.ReplaceContent(pNoteInfo).Expand();
+            this.fullViewIndex = this.NoteIndex(theNote);
+        }
+    }
+    OnEditRejected(){
+
     }
 }

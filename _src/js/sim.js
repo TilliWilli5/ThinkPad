@@ -9,10 +9,12 @@ class SIM extends BaseCtrl
         this.descInput = null;
         this.tagInput = null;
         this.tagField = null;
-        //Search setup
+        this.modeIcon = null;
+        //SEARCH setup
         this.searchEventDelay = 100;//ms
         this.searchEventHandler = null;
-        // this.searchEventTime = Date.now();
+        //EDIT setup
+        this.editedNoteID = null;
     }
     AttachTo(pView){
         super.AttachTo(pView);
@@ -20,6 +22,7 @@ class SIM extends BaseCtrl
         this.descInput = this.view.querySelector("#descInput");
         this.tagInput = this.view.querySelector("#tagInput");
         this.tagField = this.view.querySelector("#tagField");
+        this.modeIcon = this.view.querySelector("#modeIcon");
         this.AssignHandlers("#titleInput", "input", [this.TitleFirstCharHandler]);
         this.AssignHandlers("#titleInput", "keyup", [this.TitleAnyKeyHandler]);
         this.AssignHandlers("#titleInput", "keydown", [this.TitleBackspaceHandler, this.TitleEnterHandler, this.TabHandler]);
@@ -38,19 +41,25 @@ class SIM extends BaseCtrl
             case SIMMode.ZERO:{
                 this.view.querySelector("#modeIcon").ctrl.Hide();
                 this.view.querySelector("#titleLabel").ctrl.Hide();
-                this.OutModeChange(this.mode);
+                this.view.classList.remove("editMode");
+                this.OutModeChanged(this.mode);
             };break;
             case SIMMode.COMP:{
                 this.view.querySelector("#titleLabel").ctrl.Show();
-                this.OutModeChange(this.mode);
+                this.OutModeChanged(this.mode);
             };break;
             case SIMMode.SEARCH:{
-                this.view.querySelector("#modeIcon").ctrl.ChangeMode(SIMMode.SEARCH);
-                this.OutModeChange(this.mode);
+                this.view.querySelector("#modeIcon").ctrl.ChangeMode(this.mode);
+                this.OutModeChanged(this.mode);
             };break;
             case SIMMode.SYNC:{
-                this.view.querySelector("#modeIcon").ctrl.ChangeMode(SIMMode.SYNC);
-                this.OutModeChange(this.mode);
+                this.view.querySelector("#modeIcon").ctrl.ChangeMode(this.mode);
+                this.OutModeChanged(this.mode);
+            };break;
+            case SIMMode.EDIT:{
+                this.view.querySelector("#modeIcon").ctrl.Hide();
+                this.view.classList.add("editMode");
+                this.OutModeChanged(this.mode);
             };break;
         }
     }
@@ -120,6 +129,51 @@ class SIM extends BaseCtrl
         //Focus
         this.FocusTo(this.view.querySelector("#titleInput"));//Фокусировка в Chrome
         this.view.querySelector("#titleInput").focus();//Фокусировка в Firefox
+    }
+    Expand(){
+        //Hide all stuff
+        this.view.querySelector("#tagLabel").ctrl.Show();
+        this.view.querySelector("#tagBar").ctrl.Show();
+        this.view.querySelector("#descUnderline").ctrl.Show();
+        this.view.querySelector("#descLabel").ctrl.Show();
+        this.view.querySelector("#descBar").ctrl.Show();
+        this.view.querySelector("#titleUnderline").ctrl.Show();
+        this.view.querySelector("#titleLabel").ctrl.Show();
+        //Focus
+        this.FocusTo(this.tagInput);//Фокусировка в Chrome
+        this.tagInput.focus();//Фокусировка в Firefox
+    }
+    InsertNote(pNote){
+        this.titleInput.innerHTML = pNote.ctrl.title;
+        this.descInput.innerHTML = pNote.ctrl.desc;
+        this.tagInput.innerHTML = "&nbsp;";
+        this.tagField.innerHTML = "";
+        this.AddTags(pNote.ctrl.tags);
+        this.Expand();
+    }
+    AddTags(pTags){
+        if(typeof(pTags) === "string")
+            this.tagField.appendChild(new Tag(pTags.trim()).Render());
+        else
+            if(Array.isArray(pTags))
+                for(let tag of pTags)
+                {
+                    this.tagField.appendChild(new Tag(tag.trim()).Render());
+                }
+    }
+    CreateNoteInfo(pCore){
+        let title = this.titleInput.innerText.trim();
+        let desc = this.descInput.innerText.trim();
+        let tags = [];
+        for(let tag of this.tagField.children)
+            tags.push(tag.firstElementChild.innerText.trim());
+        let noteInfo = {
+            title,
+            desc,
+            tags
+        };
+        Object.assign(noteInfo, pCore);
+        return noteInfo;
     }
     //Inner Handlers
     TitleFirstCharHandler(pEvent){
@@ -229,12 +283,21 @@ class SIM extends BaseCtrl
     TagEnterHandler(pEvent){
         if(pEvent.key === "Enter")
         {
-            if(pEvent.target.innerText.trim() === "")
-                this.OutEventNoteCreated();
-            else
+            switch(this.mode)
             {
-                this.view.querySelector("#tagField").appendChild(new Tag(pEvent.target.innerText.trim()).Render());
-                pEvent.target.innerHTML = "&nbsp;";
+                case SIMMode.COMP:{
+                    if(pEvent.target.innerText.trim() === "")
+                        this.OutEventNoteCreated();
+                    else
+                    {
+                        this.view.querySelector("#tagField").appendChild(new Tag(pEvent.target.innerText.trim()).Render());
+                        pEvent.target.innerHTML = "&nbsp;";
+                    }
+                };break;
+                case SIMMode.EDIT:{
+                    this.OutEditSubmitted();
+                    this.ChangeMode(SIMMode.ZERO);
+                };break;
             }
             pEvent.preventDefault();
         }
@@ -243,7 +306,7 @@ class SIM extends BaseCtrl
         if(pEvent.key === "Tab")
         {
             pEvent.preventDefault();
-            if(this.mode === SIMMode.COMP)
+            if(this.mode === SIMMode.COMP || this.mode === SIMMode.EDIT)
             {
                 if(pEvent.target.id === "titleInput")
                     this.GotoDescInput();
@@ -257,30 +320,25 @@ class SIM extends BaseCtrl
         this.view.querySelector("#tagInput").focus();//Фокусировка в Firefox
     }
     //Delegates
+    OnNoteEdited(pNote){
+        this.ChangeMode(SIMMode.EDIT);
+        this.InsertNote(pNote);
+        this.editedNoteID = pNote.ctrl.id;
+    }
     //Events
     OutEventNoteCreated(){
-        let title = this.titleInput.innerText.trim();
-        let desc = this.descInput.innerText.trim();
-        let tags = [];
-        for(let tag of this.tagField.children)
-            tags.push(tag.firstElementChild.innerText.trim());
-        let ct = util.Time();
-        // tags.push("_ct:" + ct);
-        let id = util.UUID();
-        // tags.push("_uuid:" + uuid);
-        let status = NoteStatus.EXIST;
-        let noteInfo = {
-            title,
-            desc,
-            tags,
-            ct,
-            id,
-            status,
-        };
-        this.Emit("noteCreated", noteInfo);
+        this.Emit("noteCreated", this.CreateNoteInfo());
         this.Reset();
     }
-    OutModeChange(pMode){
+    OutModeChanged(pMode){
         this.Emit("modeChanged", pMode);
+    }
+    OutEditSubmitted(){
+        this.Emit("editSubmitted", this.CreateNoteInfo({id:this.editedNoteID}));
+        this.Reset();
+    }
+    OutEditRejected(){
+        this.Emit("editRejected");
+        this.Reset();
     }
 }

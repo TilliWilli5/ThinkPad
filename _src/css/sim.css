@@ -1,11 +1,15 @@
 #sim
 {
     border-radius:2px;
-    border:1px solid lightgrey;
+    border:2px solid lightgrey;
     overflow: hidden;
     display: flex;
     flex-wrap: wrap;
 }
+    #sim.editMode
+    {
+        border-color: #FFDC61;
+    }
 .bar
 {
     display:flex;
@@ -15,6 +19,8 @@ hr
     width:100%;
     border-top:0px;
     border-bottom:1px solid lightgray;
+    border-left:0px;
+    border-right:0px;
     display:none;
     animation:underlineUp 1s;
 }
