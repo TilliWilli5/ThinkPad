@@ -43,12 +43,13 @@ util.FindParent = function(pStartElement, pSelector = "", pInclusive = false){
         anchor = "id";
         pSelector = pSelector.slice(1);
     }
-    if(pInclusive && pStartElement[anchor] === pSelector)
+    let regexp = new RegExp(`${pSelector}($|\\s)`);
+    if(pInclusive && pStartElement[anchor].search(regexp) !== -1)
         return pStartElement;
     function FindRecursively(pCurrentElement){
         if(pCurrentElement.parentNode === null)
             return null;
-        if(pCurrentElement.parentNode[anchor] === pSelector)
+        if(pCurrentElement.parentNode[anchor].search(regexp) !== -1)
             return pCurrentElement.parentNode;
         else
             return FindRecursively(pCurrentElement.parentNode);
