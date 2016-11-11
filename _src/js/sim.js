@@ -30,9 +30,10 @@ class SIM extends BaseCtrl
         this.AssignHandlers("#titleInput", "keydown", [this.TitleBackspaceHandler, this.TitleEnterHandler, this.TabHandler]);
         this.AssignHandlers("#descInput", "keydown", [this.DescBackspaceHandler, this.DescEnterHandler, this.TabHandler]);
         this.AssignHandlers("#tagInput", "keydown", [this.TagBackspaceHandler, this.TagEnterHandler]);
-        let eventName = document.body.ontouchstart?"touchstart":"click";
-        this.AssignHandlers("#tagBar", eventName, [this.TagBarClickHandler]);
-        this.AssignHandlers("#tagFieldBar", eventName, [this.TagBarClickHandler]);
+        let tapEventName = document.body.ontouchstart?"touchstart":"click";
+        this.AssignHandlers("#tagBar", tapEventName, [this.TagBarClickHandler]);
+        this.AssignHandlers("#tagFieldBar", tapEventName, [this.TagBarClickHandler]);
+        this.AssignHandlers(".preLabel", tapEventName, [this.PreLabelTapHandler])
     }
     //Inner Methods
     ChangeMode(pMode){
@@ -117,6 +118,11 @@ class SIM extends BaseCtrl
             pElement.innerHTML = "";
     }
     Reset(){
+        //Clear all inputs
+        this.view.querySelector("#tagField").innerHTML = "";
+        this.view.querySelector("#tagInput").innerHTML = "";
+        this.view.querySelector("#descInput").innerHTML = "";
+        this.view.querySelector("#titleInput").innerHTML = "";
         //Hide all stuff
         this.view.querySelector("#tagLabel").ctrl.Hide();
         this.view.querySelector("#tagBar").ctrl.Hide();
@@ -125,11 +131,6 @@ class SIM extends BaseCtrl
         this.view.querySelector("#descBar").ctrl.Hide();
         this.view.querySelector("#titleUnderline").ctrl.Hide();
         this.view.querySelector("#titleLabel").ctrl.Hide();
-        //Clear all inputs
-        this.view.querySelector("#tagField").innerHTML = "";
-        this.view.querySelector("#tagInput").innerHTML = "";
-        this.view.querySelector("#descInput").innerHTML = "";
-        this.view.querySelector("#titleInput").innerHTML = "";
         //Init setup
         this.mode = SIMMode.ZERO;
         //Focus
@@ -180,6 +181,23 @@ class SIM extends BaseCtrl
         };
         Object.assign(noteInfo, pCore);
         return noteInfo;
+    }
+    HideAndClearTitle(){
+        this.view.querySelector("#titleInput").innerHTML = "";
+    }
+    HideAndClearDesc(){
+        this.view.querySelector("#descInput").innerHTML = "";
+        this.view.querySelector("#titleUnderline").ctrl.Hide();
+        this.view.querySelector("#descLabel").ctrl.Hide();
+        this.view.querySelector("#descBar").ctrl.Hide();
+    }
+    HideAndClearTags(){
+        this.view.querySelector("#tagInput").innerHTML = "";
+        this.tagField.innerHTML = "";
+        this.view.querySelector("#descUnderline").ctrl.Hide();
+        // this.view.querySelector("#descUnderline").ctrl.Hide();
+        this.view.querySelector("#tagLabel").ctrl.Hide();
+        this.view.querySelector("#tagBar").ctrl.Hide();
     }
     ExecCMD(){
         this.Emit("cmd",this.titleInput.innerText.trim());
@@ -330,6 +348,15 @@ class SIM extends BaseCtrl
     TagBarClickHandler(pEvent){
         this.FocusTo(this.view.querySelector("#tagInput"));//Фокусировка в Chrome
         this.view.querySelector("#tagInput").focus();//Фокусировка в Firefox
+    }
+    PreLabelTapHandler(pEvent){
+        let whichBar = util.FindParent(pEvent.target, ".bar");
+        if(whichBar.id === "tagBar")
+            this.HideAndClearTags();
+        if(whichBar.id === "descBar")
+            this.HideAndClearDesc();
+        if(whichBar.id === "titleBar")
+            this.HideAndClearTitle();
     }
     //Delegates - IN/ON
     OnNoteEdited(pNote){

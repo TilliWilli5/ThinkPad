@@ -57,7 +57,10 @@ class Note extends BaseCtrl
                 let theTagField = document.createElement("div");
                 this.noteTagField = theTagField;
                 theTagField.className = "noteTagField";
-                theTagField.innerHTML = "#" + this.tags.join(" #");
+                if(this.tags.length == 0)
+                    theTagField.innerHTML = "";
+                else
+                    theTagField.innerHTML = "<span class='tagHash'>" + this.tags.join("</span> <span class='tagHash'>");
             theBody.appendChild(theTitle);
             theBody.appendChild(theDesc);
             theBody.appendChild(theTagField);
@@ -68,7 +71,10 @@ class Note extends BaseCtrl
         this.title = this.noteTitle.innerHTML = pNoteSource.title;
         this.desc = this.noteDesc.innerHTML = pNoteSource.desc;
         this.tags = pNoteSource.tags;
-        this.noteTagField.innerHTML = "#" + this.tags.join(" #");
+        if(this.tags.length == 0)
+            this.noteTagField.innerHTML = "";
+        else
+            this.noteTagField.innerHTML = "<span class='tagHash'>" + this.tags.join("</span> <span class='tagHash'>");
         return this;
     }
     //Inner Methods
