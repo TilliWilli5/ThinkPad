@@ -3,6 +3,8 @@ class SIM extends BaseCtrl
 {
     constructor(pCore){
         super(pCore);
+        this.Trap("noteCreated", this.OnNoteCreated);
+        this.Trap("editSubmitted", this.OnEditSubmitted);
         this.mode = SIMMode.ZERO;
         this.enviroment = util.DefineEnviroment();//Не оч красивое решение, но на первое время норм
         this.titleInput = null;
@@ -42,28 +44,28 @@ class SIM extends BaseCtrl
                 this.view.querySelector("#modeIcon").ctrl.Hide();
                 this.view.querySelector("#titleLabel").ctrl.Hide();
                 this.view.classList.remove("editMode");
-                this.OutModeChanged(this.mode);
+                this.Emit("modeChanged", this.mode);
             };break;
             case SIMMode.COMP:{
                 this.view.querySelector("#titleLabel").ctrl.Show();
-                this.OutModeChanged(this.mode);
+                this.Emit("modeChanged", this.mode);
             };break;
             case SIMMode.SEARCH:{
                 this.view.querySelector("#modeIcon").ctrl.ChangeMode(this.mode);
-                this.OutModeChanged(this.mode);
+                this.Emit("modeChanged", this.mode);
             };break;
             case SIMMode.SYNC:{
                 this.view.querySelector("#modeIcon").ctrl.ChangeMode(this.mode);
-                this.OutModeChanged(this.mode);
+                this.Emit("modeChanged", this.mode);
             };break;
             case SIMMode.EDIT:{
                 this.view.querySelector("#modeIcon").ctrl.Hide();
                 this.view.classList.add("editMode");
-                this.OutModeChanged(this.mode);
+                this.Emit("modeChanged", this.mode);
             };break;
             case SIMMode.CMD:{
                 this.view.querySelector("#modeIcon").ctrl.ChangeMode(this.mode);
-                this.OutModeChanged(this.mode);
+                this.Emit("modeChanged", this.mode);
             };break;
         }
     }
@@ -301,8 +303,8 @@ class SIM extends BaseCtrl
             if(pEvent.target.innerText.trim() === "")
                 switch(this.mode)
                 {
-                    case SIMMode.COMP:this.OutEventNoteCreated();this.ChangeMode(SIMMode.ZERO);break;
-                    case SIMMode.EDIT:this.OutEditSubmitted();this.ChangeMode(SIMMode.ZERO);break;
+                    case SIMMode.COMP:this.Emit("noteCreated", this.CreateNoteInfo());break;//this.OutEventNoteCreated();this.ChangeMode(SIMMode.ZERO);break;
+                    case SIMMode.EDIT:this.Emit("editSubmitted", this.CreateNoteInfo({id:this.editedNoteID}));break;//this.OutEditSubmitted();this.ChangeMode(SIMMode.ZERO);break;
                 }
             else
             {
@@ -335,20 +337,17 @@ class SIM extends BaseCtrl
         this.InsertNote(pNote);
         this.editedNoteID = pNote.ctrl.id;
     }
-    //Events
-    OutEventNoteCreated(){
-        this.Emit("noteCreated", this.CreateNoteInfo());
+    //Event Traps
+    OnNoteCreated(){
         this.Reset();
+        this.ChangeMode(SIMMode.ZERO);
     }
-    OutModeChanged(pMode){
-        this.Emit("modeChanged", pMode);
-    }
-    OutEditSubmitted(){
-        this.Emit("editSubmitted", this.CreateNoteInfo({id:this.editedNoteID}));
+    OnEditSubmitted(){
         this.Reset();
+        this.ChangeMode(SIMMode.ZERO);
     }
     OutEditRejected(){
-        this.Emit("editRejected");
         this.Reset();
+        this.ChangeMode(SIMMode.ZERO);
     }
 }
