@@ -4,44 +4,75 @@ class Emitter extends Delegate
     constructor(pCore){
         super(pCore);
     }
-    On(pEventName, pNewHandler){
-        let events = Emitter.heap.get(this);
+    On(pEventName, pDelegate){
+        let events = Emitter.delegateHeap.get(this);
         if(events)
         {
             if(events[pEventName])
             {
-                events[pEventName].push(pNewHandler);
+                events[pEventName].push(pDelegate);
             }
             else
             {
                 events[pEventName] = [];
-                events[pEventName].push(pNewHandler);
+                events[pEventName].push(pDelegate);
             }
         }
         else
         {
-            let events = {};
-            events[pEventName] = [pNewHandler];
-            Emitter.heap.set(this, events);
+            events = {};
+            events[pEventName] = [pDelegate];
+            Emitter.delegateHeap.set(this, events);
         }
         return this;
     }
-    Once(){
-
-    }
-    Remove(){
-
-    }
+    Once(){throw "Not implemented";}
+    Remove(){throw "Not implemented";}
     Emit(pEventName, pArgs){
-        let events = Emitter.heap.get(this);
+        let interrupt = false;
+        let trapEvents = Emitter.trapHeap.get(this);
+        if(trapEvents)
+        {
+            let traps = trapEvents[pEventName];
+            if(traps)
+                for(let theTrap of traps)
+                    if(theTrap.call(this, pArgs))
+                        interrupt = true;
+        }
+        if(interrupt) return this;//Прерывание цепочки вызовов - делегатов не будет
+        let delegateEvents = Emitter.delegateHeap.get(this);
+        if(delegateEvents)
+        {
+            let delegates = delegateEvents[pEventName];
+            if(delegates)
+                for(let theDelegate of delegates)
+                    theDelegate.call(this, pArgs);
+        }
+        return this;
+    }
+    Trap(pEventName, pTrap){
+        let events = Emitter.trapHeap.get(this);
         if(events)
         {
-            let handlers = events[pEventName];
-            if(handlers)
-                for(let theHandler of handlers)
-                    // theHandler(pArgs);
-                    theHandler.call(this, pArgs);
+            if(events[pEventName])
+            {
+                events[pEventName].push(pTrap);
+            }
+            else
+            {
+                events[pEventName] = [];
+                events[pEventName].push(pTrap);
+            }
         }
+        else
+        {
+            events = {};
+            events[pEventName] = [pTrap];
+            Emitter.trapHeap.set(this, events);
+        }
+        return this;
     }
+    Untrap(pEventName, pTrap){throw "Not implemented";}
 }
-Emitter.heap = new WeakMap();
+Emitter.delegateHeap = new WeakMap();
+Emitter.trapHeap = new WeakMap();
