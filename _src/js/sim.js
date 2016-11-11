@@ -118,11 +118,6 @@ class SIM extends BaseCtrl
             pElement.innerHTML = "";
     }
     Reset(){
-        //Clear all inputs
-        this.view.querySelector("#tagField").innerHTML = "";
-        this.view.querySelector("#tagInput").innerHTML = "";
-        this.view.querySelector("#descInput").innerHTML = "";
-        this.view.querySelector("#titleInput").innerHTML = "";
         //Hide all stuff
         this.view.querySelector("#tagLabel").ctrl.Hide();
         this.view.querySelector("#tagBar").ctrl.Hide();
@@ -131,6 +126,11 @@ class SIM extends BaseCtrl
         this.view.querySelector("#descBar").ctrl.Hide();
         this.view.querySelector("#titleUnderline").ctrl.Hide();
         this.view.querySelector("#titleLabel").ctrl.Hide();
+        //Clear all inputs
+        this.view.querySelector("#tagField").innerHTML = "";
+        this.view.querySelector("#tagInput").innerHTML = "";
+        this.view.querySelector("#descInput").innerHTML = "";
+        this.view.querySelector("#titleInput").innerHTML = "";
         //Init setup
         this.mode = SIMMode.ZERO;
         //Focus
