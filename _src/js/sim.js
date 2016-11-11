@@ -3,8 +3,8 @@ class SIM extends BaseCtrl
 {
     constructor(pCore){
         super(pCore);
-        this.Trap("noteCreated", this.OnNoteCreated);
-        this.Trap("editSubmitted", this.OnEditSubmitted);
+        this.Trap("noteCreated", this.OutNoteCreated);
+        this.Trap("editSubmitted", this.OutEditSubmitted);
         this.mode = SIMMode.ZERO;
         this.enviroment = util.DefineEnviroment();//Не оч красивое решение, но на первое время норм
         this.titleInput = null;
@@ -331,18 +331,18 @@ class SIM extends BaseCtrl
         this.FocusTo(this.view.querySelector("#tagInput"));//Фокусировка в Chrome
         this.view.querySelector("#tagInput").focus();//Фокусировка в Firefox
     }
-    //Delegates
+    //Delegates - IN/ON
     OnNoteEdited(pNote){
         this.ChangeMode(SIMMode.EDIT);
         this.InsertNote(pNote);
         this.editedNoteID = pNote.ctrl.id;
     }
-    //Event Traps
-    OnNoteCreated(){
+    //Event Traps - OUT/AFTER
+    OutNoteCreated(){
         this.Reset();
         this.ChangeMode(SIMMode.ZERO);
     }
-    OnEditSubmitted(){
+    OutEditSubmitted(){
         this.Reset();
         this.ChangeMode(SIMMode.ZERO);
     }

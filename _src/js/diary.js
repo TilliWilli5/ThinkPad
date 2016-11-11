@@ -3,6 +3,7 @@ class Diary extends BaseCtrl
 {
     constructor(pCore){
         super(pCore);
+        this.Trap("noteEdited", this.OutNoteEdited);
         this.selectionMask = [];
         this.fullViewIndex = null;
         this.noteList = null;
@@ -211,8 +212,7 @@ class Diary extends BaseCtrl
         this.view.querySelector("#diaryActionBar").ctrl.Hide();
     }
     DiaryEditBtnClick(pEvent){
-        let noteIndex = this.FirstSelectedIndex();
-        this.OutEventNoteEdited(this.noteList.children[noteIndex]);
+        this.Emit("noteEdited", this.noteList.children[this.FirstSelectedIndex()]);
     }
     //Delegates
     InEventNoteSwipeUp(pNote){
@@ -223,9 +223,7 @@ class Diary extends BaseCtrl
             this.fullViewIndex = null;
         }
         else
-        {
-            this.OutEventNoteEdited(pNote);
-        }
+            this.Emit("noteEdited", pNote);
     }
     InEventNoteSwipeDown(pNote){
         let noteIndex = this.NoteIndex(pNote)
@@ -282,17 +280,13 @@ class Diary extends BaseCtrl
             // case SIMMode.SEARCH: this.FoldAllNotes();break;
         }
     }
-    //Events
-    OutEventNoteEdited(pNote){
+    OutNoteEdited(pNote){
         //Убираем editMode выделение со всех записей. Переписать грамотно
         for(let note of this.noteList.children)
             note.classList.remove("editMode");
         this.ClearSelection();
-        // this.InEventNoteTap(pNote);
-        // pNote.ctrl.Fold();
         this.FoldAllNotes();
         pNote.classList.add("editMode");
-        this.Emit("noteEdited", pNote);
     }
     OnEditSubmitted(pNoteInfo){
         let theNote = this.FindNote(pNoteInfo.id);
@@ -304,7 +298,5 @@ class Diary extends BaseCtrl
             this.fullViewIndex = this.NoteIndex(theNote);
         }
     }
-    OnEditRejected(){
-
-    }
+    OnEditRejected(){throw "Not implemented";}
 }
