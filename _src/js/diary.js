@@ -92,7 +92,7 @@ class Diary extends BaseCtrl
     PrepareSearch(pQuery){
         let fullTextSearch = null;
         let tagMask = null;
-        let _result = ()=>{return {fullTextSearch, tagMask};};
+        let _result = ()=>({fullTextSearch, tagMask});
         if(pQuery === "")//QueryType1
             return _result();
         let queryParts = pQuery.split("#");

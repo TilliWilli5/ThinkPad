@@ -61,6 +61,10 @@ class SIM extends BaseCtrl
                 this.view.classList.add("editMode");
                 this.OutModeChanged(this.mode);
             };break;
+            case SIMMode.CMD:{
+                this.view.querySelector("#modeIcon").ctrl.ChangeMode(this.mode);
+                this.OutModeChanged(this.mode);
+            };break;
         }
     }
     GotoTitleInput(){
@@ -175,6 +179,10 @@ class SIM extends BaseCtrl
         Object.assign(noteInfo, pCore);
         return noteInfo;
     }
+    ExecCMD(){
+        this.Emit("cmd",this.titleInput.innerText.trim());
+        this.titleInput.innerHTML = "";
+    }
     //Inner Handlers
     TitleFirstCharHandler(pEvent){
         if(this.mode === SIMMode.ZERO)
@@ -186,25 +194,32 @@ class SIM extends BaseCtrl
             {
                 case "?": this.ChangeMode(SIMMode.SEARCH);pEvent.target.innerHTML="";break;
                 case "@": this.ChangeMode(SIMMode.SYNC);pEvent.target.innerHTML="";break;
+                case ">": this.ChangeMode(SIMMode.CMD);pEvent.target.innerHTML="";break;
                 default : this.ChangeMode(SIMMode.COMP);break;
             }
         }
     }
     TitleEnterHandler(pEvent){
-        if(pEvent.target.id === "titleInput")
+        if(pEvent.key === "Enter")
         {
-            if(pEvent.key === "Enter")
+            switch(this.mode)
             {
-                if(this.mode === SIMMode.ZERO)
-                {
-                    
-                }
-                else
-                {
-                    this.GotoDescInput();
-                }
-                pEvent.preventDefault();
+                case SIMMode.ZERO:break;
+                case SIMMode.SEARCH:break;
+                case SIMMode.COMP:
+                case SIMMode.EDIT:this.GotoDescInput();break;
+                case SIMMode.SYNC:
+                case SIMMode.CMD:this.ExecCMD();break;
             }
+            if(this.mode === SIMMode.ZERO)
+            {
+                
+            }
+            else
+            {
+                
+            }
+            pEvent.preventDefault();
         }
     }
     TitleBackspaceHandler(pEvent){
