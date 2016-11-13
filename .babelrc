@@ -1,4 +1,4 @@
 {
     "presets": ["es2016"],
-    "plugins": ["transform-async-to-generator"]
+    "plugins": ["transform-async-to-generator", ["debug-mode", "on"]]
 }

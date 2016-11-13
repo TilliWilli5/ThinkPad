@@ -72,6 +72,60 @@ class Emitter extends Delegate
         }
         return this;
     }
+    Try(pEventName, pCallback, pArgs){
+        let _result = {
+            successful:true,
+            trapped:false,
+            results:[]
+        };
+        let interrupt = false;
+        let trapEvents = Emitter.trapHeap.get(this);
+        if(trapEvents)
+        {
+            let traps = trapEvents[pEventName];
+            if(traps)
+                for(let theTrap of traps)
+                    if(theTrap.call(this, pArgs))
+                        interrupt = true;
+        }
+        if(interrupt)
+        {
+            _result.successful = false;
+            _result.trapped = true;
+            setTimeout(pCallback, 0, _result);
+            return this;//Прерывание цепочки вызовов - делегатов не будет
+        }
+        let delegateEvents = Emitter.delegateHeap.get(this);
+        if(delegateEvents)
+        {
+            let delegates = delegateEvents[pEventName];
+            let stage = 0;
+            if(delegates)
+                for(let theDelegate of delegates)
+                {
+                    ++stage;
+                    let innerResult = theDelegate.call(this, pArgs);
+                    if(innerResult)
+                    {
+                        if(typeof innerResult == "boolean")
+                            innerResult = {};
+                        innerResult.stage = stage;
+                        _result.results.push(innerResult);
+                    }
+                }
+            _result.stageCount = stage;
+            if(_result.results.length != 0)
+            {
+                _result.successful = false;
+                console.time("Try");
+                setTimeout(pCallback, 0, _result);
+                return this;
+            }
+        }
+        setTimeout(pCallback, 0, _result);
+        return this;
+    }
+    AsyncEmit(pEventName, pArgs){throw "Not implemented";}
     Untrap(pEventName, pTrap){throw "Not implemented";}
 }
 Emitter.delegateHeap = new WeakMap();

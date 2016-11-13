@@ -38,7 +38,10 @@ class SIM extends BaseCtrl
     //Inner Methods
     ChangeMode(pMode){
         this.mode = pMode;
-        console.log("Enter mode: " + SIMModetoName[pMode]);
+        {
+            "debug";
+            console.log("Enter mode: " + SIMModetoName[pMode]);
+        }
         switch(pMode)
         {
             case SIMMode.ZERO:{
