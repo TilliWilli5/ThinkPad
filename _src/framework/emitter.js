@@ -29,6 +29,10 @@ class Emitter extends Delegate
     Once(){throw "Not implemented";}
     Remove(){throw "Not implemented";}
     Emit(pEventName, pArgs){
+        {
+            "debug";
+            console.groupCollapsed(`%c\u26AB${this.constructor.name}[${pEventName}]`, "color:DodgerBlue;font-size:1em;");
+        }
         let interrupt = false;
         let trapEvents = Emitter.trapHeap.get(this);
         if(trapEvents)
@@ -47,6 +51,10 @@ class Emitter extends Delegate
             if(delegates)
                 for(let theDelegate of delegates)
                     theDelegate.call(this, pArgs);
+        }
+        {
+            "debug";
+            console.groupEnd(`%c\u26AB${this.constructor.name}[${pEventName}]`);
         }
         return this;
     }

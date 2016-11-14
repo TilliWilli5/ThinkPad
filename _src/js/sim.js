@@ -40,7 +40,7 @@ class SIM extends BaseCtrl
         this.mode = pMode;
         {
             "debug";
-            console.log("Enter mode: " + SIMModetoName[pMode]);
+            console.log(`%c${this.constructor.name}[Mode changed] ${SIMModetoName[pMode]}`, "color:darkslategrey;font-size:1.25em;");
         }
         switch(pMode)
         {

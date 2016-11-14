@@ -54,6 +54,7 @@ class Diary extends BaseCtrl
         for(let tagName of pNoteSource.tags)
             this.tagHashHeap[tagName] = true;
         this.view.querySelector("#noteList").appendChild(theNote.Render());
+        this.Emit("noteAdded", theNote);
     }
     HideAllNotes(){
         for(let note of this.noteList.children)
@@ -205,9 +206,11 @@ class Diary extends BaseCtrl
         for(let iX=notes.length-1;iX>=0;--iX)
             if(this.selectionMask[iX])
             {
+                let noteID = notes[iX];
                 notes[iX].parentNode.removeChild(notes[iX]);
                 //Тут же вырезаем из селекшена
                 this.selectionMask.splice(iX);
+                this.Emit("noteDeleted", noteID);
             }
         this.view.querySelector("#diaryActionBar").ctrl.Hide();
     }
