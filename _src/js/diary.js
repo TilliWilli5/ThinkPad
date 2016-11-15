@@ -301,5 +301,5 @@ class Diary extends BaseCtrl
             this.fullViewIndex = this.NoteIndex(theNote);
         }
     }
-    OnEditRejected(){throw "Not implemented";}
+    OnEditRejected(){{"debug";this.ThrowNotImplemented("OnEditRejected");}}
 }

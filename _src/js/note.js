@@ -67,6 +67,16 @@ class Note extends BaseCtrl
         theView.appendChild(theBody);
         return theView;
     }
+    Serialize(){
+        return {
+            title:this.title,
+            desc:this.desc,
+            tags:this.tags,
+            id:this.id,
+            ct:this.ct,
+            status:this.status
+        };
+    }
     ReplaceContent(pNoteSource){
         this.title = this.noteTitle.innerHTML = pNoteSource.title;
         this.desc = this.noteDesc.innerHTML = pNoteSource.desc;

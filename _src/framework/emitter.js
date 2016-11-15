@@ -26,8 +26,8 @@ class Emitter extends Delegate
         }
         return this;
     }
-    Once(){throw "Not implemented";}
-    Remove(){throw "Not implemented";}
+    Once(){{"debug";this.ThrowNotImplemented("Once");}}
+    Remove(){{"debug";this.ThrowNotImplemented("Remove");}}
     Emit(pEventName, pArgs){
         {
             "debug";
@@ -133,8 +133,8 @@ class Emitter extends Delegate
         setTimeout(pCallback, 0, _result);
         return this;
     }
-    AsyncEmit(pEventName, pArgs){throw "Not implemented";}
-    Untrap(pEventName, pTrap){throw "Not implemented";}
+    AsyncEmit(pEventName, pArgs){{"debug";this.ThrowNotImplemented("AsyncEmit");}}
+    Untrap(pEventName, pTrap){{"debug";this.ThrowNotImplemented("Untrap");}}
 }
 Emitter.delegateHeap = new WeakMap();
 Emitter.trapHeap = new WeakMap();
