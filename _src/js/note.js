@@ -10,8 +10,8 @@ class Note extends BaseCtrl
         this.noteDesc = null
         this.noteTagField = null
         //Присоединяем метаданные
-        this.ct = util.Time();
-        this.id = util.UUID();
+        this.ct = this.ct || util.Time();
+        this.id = this.id || util.UUID();
         this.status = NoteStatus.EXIST;
     }
     Render(){
@@ -67,7 +67,7 @@ class Note extends BaseCtrl
         theView.appendChild(theBody);
         return theView;
     }
-    Serialize(){
+    PreSerialize(){
         return {
             title:this.title,
             desc:this.desc,

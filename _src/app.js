@@ -40,17 +40,18 @@ var app = (()=>{
     simCtrl.On("search", diaryCtrl.Delegate("OnSearch"));
     simCtrl.On("editSubmitted", diaryCtrl.Delegate("OnEditSubmitted"));
     simCtrl.On("editRejected", diaryCtrl.Delegate("OnEditRejected"));
-    //Забиваем стартовыми нотсами этот бренный мир
-    diaryCtrl.AddNote({title:"Note1",desc:"Description here",tags:["tag1", "tag2", "tag3", "note"], status:1});
-    diaryCtrl.AddNote({title:"Idea 2",desc:"This is the Great idea description",tags:["idea", "great", "cool", "awesome", "good", "ok", "nice"], status:1});
-    diaryCtrl.AddNote({title:"Thought 3",desc:"Its very deep thought",tags:["thought", "deep", "56"], status:1});
-    diaryCtrl.AddNote({title:"Poker Trick",desc:"Never tilt",tags:["poker", "tactic", "tilt", "general strategy"], status:1});
     diaryCtrl.On("noteEdited", simCtrl.Delegate("OnNoteEdited"));
-
     //Application stuff
-    let storage = new Storage();
+    let storage = new LocalStorage();
     diaryCtrl.On("noteAdded", storage.Delegate("OnNoteAdded"));
     diaryCtrl.On("noteDeleted", storage.Delegate("OnNoteDeleted"));
+    //Забиваем стартовыми нотсами этот бренный мир
+    // diaryCtrl.AddNote({title:"Note1",desc:"Description here",tags:["tag1", "tag2", "tag3", "note"], status:1, id:1});
+    // diaryCtrl.AddNote({title:"Idea 2",desc:"This is the Great idea description",tags:["idea", "great", "cool", "awesome", "good", "ok", "nice"], status:1, id:2});
+    // diaryCtrl.AddNote({title:"Thought 3",desc:"Its very deep thought",tags:["thought", "deep", "56"], status:1, id:3});
+    // diaryCtrl.AddNote({title:"Poker Trick",desc:"Never tilt",tags:["poker", "tactic", "tilt", "general strategy"], status:1, id:4});
+    storage.On("diaryLoaded", diaryCtrl.Delegate("OnDiaryLoaded"));
+    storage.LoadDiary();
     //Последняя строка
     $.sim = simCtrl;
     $.diary = diaryCtrl;

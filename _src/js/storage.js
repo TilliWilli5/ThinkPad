@@ -1,13 +1,23 @@
-class Storage extends Delegate
+class LocalStorage extends Emitter
 {
     // constructor(pCore){
     //     super(pCore);
     // }
     OnNoteAdded(pNote){
-        localforage.setItem(`note:${pNote.id}`, pNote.Serialize()).catch((pReason)=>{console.error(pReason)});
+        localforage.setItem(`note:${pNote.id}`, pNote.PreSerialize()).catch((pReason)=>{console.error(pReason)});
     }
     OnNoteDeleted(pNoteID){
-        {"debug";this.ThrowNotImplemented("OnNoteDeleted");}
-        // localforage.removeItem(`note:${pNoteID}`);
+        // {"debug";this.ThrowNotImplemented("OnNoteDeleted");}
+        localforage.removeItem(`note:${pNoteID}`);
+    }
+    LoadDiary(){
+        let diary = [];
+        let that = this;
+        localforage.iterate((pValue, pKey)=>{
+            if(pKey.substr(0,5) === "note:")
+                diary.push(pValue);
+        }).then(()=>{that.Emit("diaryLoaded", diary)});
+        {"debug";console.log("Diary loaded");}
+        // this.Emit("diaryLoaded")
     }
 }

@@ -302,4 +302,10 @@ class Diary extends BaseCtrl
         }
     }
     OnEditRejected(){{"debug";this.ThrowNotImplemented("OnEditRejected");}}
+    OnDiaryLoaded(pDiary){
+        for(let note of pDiary)
+        {
+            this.AddNote(note);
+        }
+    }
 }
