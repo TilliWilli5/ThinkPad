@@ -10,6 +10,9 @@ class LocalStorage extends Emitter
         // {"debug";this.ThrowNotImplemented("OnNoteDeleted");}
         localforage.removeItem(`note:${pNoteID}`);
     }
+    OnAfterEditSubmitted(pNote){
+        localforage.setItem(`note:${pNote.ctrl.id}`, pNote.ctrl.PreSerialize()).catch((pReason)=>{console.error(pReason)});
+    }
     LoadDiary(){
         let diary = [];
         let that = this;

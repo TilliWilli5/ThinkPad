@@ -206,7 +206,7 @@ class Diary extends BaseCtrl
         for(let iX=notes.length-1;iX>=0;--iX)
             if(this.selectionMask[iX])
             {
-                let noteID = notes[iX];
+                let noteID = notes[iX].ctrl.id;
                 notes[iX].parentNode.removeChild(notes[iX]);
                 //Тут же вырезаем из селекшена
                 this.selectionMask.splice(iX);
@@ -299,6 +299,7 @@ class Diary extends BaseCtrl
             // this.FoldAllNotes();//Сворачиваем все записи кые могут быть открыты
             theNote.ctrl.ReplaceContent(pNoteInfo).Expand();
             this.fullViewIndex = this.NoteIndex(theNote);
+            this.Emit("afterEditSubmitted", theNote);
         }
     }
     OnEditRejected(){{"debug";this.ThrowNotImplemented("OnEditRejected");}}
