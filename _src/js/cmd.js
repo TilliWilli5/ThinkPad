@@ -27,7 +27,6 @@ class CMD extends Emitter
         document.body.removeChild(tempLink);
     }
     LoadFile(){
-        //return JSON.parse(window.localStorage.getItem("state"));
         var fileInput = document.createElement("input");
         fileInput.type = "file";
         fileInput.style.display = "none";
@@ -37,17 +36,11 @@ class CMD extends Emitter
             var reader = new FileReader();
             reader.onload = function()
             {
-                //console.log(this.result);
-                // CApplication.theApplication.RestoreState(JSON.parse(this.result));
                 self.Emit("fileLoaded", JSON.parse(this.result));
                 document.body.removeChild(fileInput);
-                //Все что ниже - ужасное решение, потом переписать
-                // diaryCtrl = document.getElementById("diary").ctrl;
-                // diaryCtrl
             }
             reader.readAsText(fileInput.files[0]);
         }
-        // window.f = fileInput;
         document.body.appendChild(fileInput);
         fileInput.click();
     }
