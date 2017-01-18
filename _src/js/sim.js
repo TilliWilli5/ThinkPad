@@ -202,8 +202,8 @@ class SIM extends BaseCtrl
         this.view.querySelector("#tagLabel").ctrl.Hide();
         this.view.querySelector("#tagBar").ctrl.Hide();
     }
-    ExecCMD(){
-        this.Emit("cmd",this.titleInput.innerText.trim());
+    ExecuteCommand(){
+        this.Emit("executeCommand",this.titleInput.innerText.trim());
         this.titleInput.innerHTML = "";
     }
     //Inner Handlers
@@ -232,7 +232,7 @@ class SIM extends BaseCtrl
                 case SIMMode.COMP:
                 case SIMMode.EDIT:this.GotoDescInput();break;
                 case SIMMode.SYNC:
-                case SIMMode.CMD:this.ExecCMD();break;
+                case SIMMode.CMD:this.ExecuteCommand();break;
             }
             if(this.mode === SIMMode.ZERO)
             {

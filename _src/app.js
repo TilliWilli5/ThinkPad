@@ -53,6 +53,10 @@ var app = (()=>{
         // diaryCtrl.AddNote({title:"Poker Trick",desc:"Never tilt",tags:["poker", "tactic", "tilt", "general strategy"], status:1, id:4});
     storage.On("diaryLoaded", diaryCtrl.Delegate("OnDiaryLoaded"));
     storage.LoadDiary();
+    //CMD
+    let cmd = new CMD();
+    simCtrl.On("executeCommand", cmd.Delegate("OnExecuteCommand"));
+    cmd.On("fileLoaded", diaryCtrl.Delegate("OnDiaryLoaded"));
     //Последняя строка
     $.sim = simCtrl;
     $.diary = diaryCtrl;

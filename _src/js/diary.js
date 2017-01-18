@@ -309,4 +309,10 @@ class Diary extends BaseCtrl
             this.AddNote(note);
         }
     }
+    Serialize(){
+        let notes = [];
+        for(let note of this.noteList.children)
+            notes.push(note.ctrl.PreSerialize());
+        return JSON.stringify(notes);
+    }
 }
