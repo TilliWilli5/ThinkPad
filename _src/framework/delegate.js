@@ -1,4 +1,5 @@
 "use strict";
+import "./base.js";
 class Delegate extends Base
 {
     constructor(pCore){

@@ -1,3 +1,11 @@
+import "./js_external/uuid.js";
+import "./framework/util.js";
+import "./framework/enumeration.js";
+import "./framework/base.js";
+import "./framework/delegate.js";
+import "./framework/emitter.js";
+import "./framework/base_ctrl.js";
+import "./framework/application.js";
 var app = (()=>{
     //Результирующий экспорт
     let $ = {};

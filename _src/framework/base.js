@@ -1,4 +1,5 @@
 "use strict";
+export default Base;
 class Base
 {
     constructor(pCore){
