@@ -1,3 +1,6 @@
+"use strict";
+var BaseCtrl = require("./framework/base_ctrl.js");
+module.exports = ModeIcon;
 class ModeIcon extends BaseCtrl
 {
     constructor(pCore){

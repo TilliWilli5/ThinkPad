@@ -1,4 +1,6 @@
 "use strict";
+var BaseCtrl = require("./framework/base_ctrl.js");
+module.exports = SIM;
 class SIM extends BaseCtrl
 {
     constructor(pCore){

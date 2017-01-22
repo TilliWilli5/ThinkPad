@@ -1,3 +1,6 @@
+"use strict";
+var BaseCtrl = require("./framework/base_ctrl.js");
+module.exports = Bar;
 class Bar extends BaseCtrl
 {
     constructor(pCore){

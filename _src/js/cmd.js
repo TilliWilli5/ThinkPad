@@ -1,3 +1,6 @@
+"use strict";
+var Emitter = require("./framework/emitter.js");
+module.exports = CMD;
 class CMD extends Emitter
 {
     constructor(pCore){

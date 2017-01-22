@@ -1,4 +1,5 @@
-
+"use strict";
+module.exports = {SIMMode, SIMModetoName, SIMCharToMode, SIMModeToChar, NoteStatus};
 // SIM Modes
 const SIMMode = {
     ZERO:0,//Приложение только открыто

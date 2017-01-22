@@ -1,3 +1,6 @@
+"use strict";
+var Emitter = require("./framework/emitter.js");
+module.exports = LocalStorage;
 class LocalStorage extends Emitter
 {
     // constructor(pCore){
