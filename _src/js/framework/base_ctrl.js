@@ -1,6 +1,5 @@
 "use strict";
 var Emitter = require("./emitter.js");
-module.exports = BaseCtrl;
 class BaseCtrl extends Emitter
 {
     constructor(pCore){
@@ -61,3 +60,4 @@ class BaseCtrl extends Emitter
     //Delegates
     //Events
 }
+module.exports = BaseCtrl;

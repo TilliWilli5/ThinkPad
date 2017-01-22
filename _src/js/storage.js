@@ -1,7 +1,7 @@
 "use strict";
 var Emitter = require("./framework/emitter.js");
-var localforage = require("exports-loader?localforage!./js_external.js");
-module.exports = LocalStorage;
+// var localforage = require("exports-loader?localforage!./js_external/localforage.min.js");
+var localforage = require("localforage");
 class LocalStorage extends Emitter
 {
     // constructor(pCore){
@@ -28,3 +28,4 @@ class LocalStorage extends Emitter
         // this.Emit("diaryLoaded")
     }
 }
+module.exports = LocalStorage;

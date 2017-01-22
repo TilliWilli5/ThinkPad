@@ -1,5 +1,4 @@
 "use strict";
-module.exports = {SIMMode, SIMModetoName, SIMCharToMode, SIMModeToChar, NoteStatus};
 // SIM Modes
 const SIMMode = {
     ZERO:0,//Приложение только открыто
@@ -41,3 +40,4 @@ const NoteStatus = {
     DELETED:2,
     HIDDEN:3
 }
+module.exports = {SIMMode, SIMModetoName, SIMCharToMode, SIMModeToChar, NoteStatus};

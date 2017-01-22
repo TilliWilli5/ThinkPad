@@ -1,6 +1,5 @@
 "use strict";
 var BaseCtrl = require("./base_ctrl.js");
-module.exports = AdvCtrl;
 class AdvCtrl extends BaseCtrl
 {
     constructor(pCore){
@@ -26,3 +25,4 @@ class AdvCtrl extends BaseCtrl
     //Delegates
     //Events
 }
+module.exports = AdvCtrl;

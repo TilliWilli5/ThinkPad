@@ -1,5 +1,4 @@
 "use strict";
-module.exports = Validator;
 //Another cool name for class - Calbitter/Calbiter (aka CallbackEmitter)
 class Validator extends Emitter
 {
@@ -9,3 +8,4 @@ class Validator extends Emitter
     Validate(pValue, pCallback, pArgs){{"debug";this.ThrowNotImplemented("Validate");}}
     Try(pValue, pCallback, pArgs){{"debug";this.ThrowNotImplemented("Try");}}//Alias for Valildate
 }
+module.exports = Validator;

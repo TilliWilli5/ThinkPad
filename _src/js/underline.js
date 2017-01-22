@@ -1,6 +1,5 @@
 "use strict";
 var BaseCtrl = require("./framework/base_ctrl.js");
-module.exports = Underline;
 class Underline extends BaseCtrl
 {
     constructor(pCore){
@@ -8,3 +7,4 @@ class Underline extends BaseCtrl
         this.animDuration = 0.6;
     }
 }
+module.exports = Underline;

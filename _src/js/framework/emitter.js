@@ -1,6 +1,5 @@
 "use strict";
 var Delegate = require("./delegate.js");
-module.exports = Emitter;
 class Emitter extends Delegate
 {
     constructor(pCore){
@@ -140,3 +139,4 @@ class Emitter extends Delegate
 }
 Emitter.delegateHeap = new WeakMap();
 Emitter.trapHeap = new WeakMap();
+module.exports = Emitter;

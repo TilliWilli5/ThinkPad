@@ -1,6 +1,12 @@
 "use strict";
 var BaseCtrl = require("./framework/base_ctrl.js");
-module.exports = SIM;
+var util = require("./framework/util.js");
+var enumModule = require("./enum.js");
+var SIMMode = enumModule.SIMMode;
+var SIMModetoName = enumModule.SIMModetoName;
+var SIMCharToMode = enumModule.SIMCharToMode;
+var SIMModeToChar = enumModule.SIMModeToChar;
+var NoteStatus = enumModule.NoteStatus;
 class SIM extends BaseCtrl
 {
     constructor(pCore){
@@ -383,3 +389,4 @@ class SIM extends BaseCtrl
         this.ChangeMode(SIMMode.ZERO);
     }
 }
+module.exports = SIM;

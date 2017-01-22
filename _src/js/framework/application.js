@@ -1,6 +1,5 @@
 "use strict";
 var Emitter = require("./emitter.js");
-module.exports = Application;
 const AppStorage = new Enumeration({
     ZERO:0,
     LOCAL:1,
@@ -33,3 +32,4 @@ class Application extends Emitter
         
     }
 }
+module.exports = Application;

@@ -1,5 +1,4 @@
 "use strict";
-module.exports = Tag;
 class Tag
 {
     constructor(pValue){
@@ -38,3 +37,4 @@ class Tag
         }, false, true);
     }
 }
+module.exports = Tag;

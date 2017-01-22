@@ -1,6 +1,7 @@
 "use strict";
 var BaseCtrl = require("./framework/base_ctrl.js");
-module.exports = Diary;
+var Note = require("./note.js");
+var NoteStatus = require("./enum.js").NoteStatus;
 class Diary extends BaseCtrl
 {
     constructor(pCore){
@@ -318,3 +319,4 @@ class Diary extends BaseCtrl
         return JSON.stringify(notes);
     }
 }
+module.exports = Diary;

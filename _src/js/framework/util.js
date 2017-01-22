@@ -1,6 +1,5 @@
 "use strict";
-var uuid = require("exports-loader?uuid!../js_external.js");
-module.exports = util;
+var uuid = require("exports-loader?uuid!../js_external/uuid.js");
 var util = {};
 util.enviroment = {
     ZERO: 0,
@@ -69,3 +68,4 @@ util.Time = function(){
     timestamp = `${timestamp.toISOString().slice(0, -1)}${offsetSign}${hourOffset}:${minuteOffset}`;
     return timestamp;
 }
+module.exports = util;

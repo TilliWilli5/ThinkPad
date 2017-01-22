@@ -1,6 +1,5 @@
 "use strict";
 var BaseCtrl = require("./framework/base_ctrl.js");
-module.exports = Prelabel;
 class Prelabel extends BaseCtrl
 {
     constructor(pCore){
@@ -22,3 +21,4 @@ class Prelabel extends BaseCtrl
         }
     }
 }
+module.exports = Prelabel;

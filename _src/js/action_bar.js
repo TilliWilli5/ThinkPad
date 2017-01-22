@@ -1,6 +1,5 @@
 "use strict";
 var BaseCtrl = require("./framework/base_ctrl.js");
-module.exports = ActionBar;
 class ActionBar extends BaseCtrl
 {
     constructor(pCore){
@@ -22,3 +21,4 @@ class ActionBar extends BaseCtrl
         }
     }
 }
+module.exports = ActionBar;

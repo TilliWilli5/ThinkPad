@@ -1,6 +1,5 @@
 "use strict";
 var Base = require("./base.js");
-module.exports = Delegate;
 class Delegate extends Base
 {
     constructor(pCore){
@@ -25,6 +24,7 @@ class Delegate extends Base
         console.debug(`%c\t\u27A5${pWho.constructor.name}(${pMethod})`, "color:ForestGreen;font-size:1em;");
     }
 }
+module.exports = Delegate;
 // {
 //     "debug";
 //     Delegate.WriteDebugInfo = function(pWho, pMethod){console.debug(`%c\t\u27A5${pWho.constructor.name}(${pMethod})`, "color:ForestGreen;font-size:1em;");}

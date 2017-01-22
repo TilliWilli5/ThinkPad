@@ -1,5 +1,4 @@
 "use strict";
-module.exports = Enumeration;
 class Enumeration
 {
     constructor(pCore)
@@ -12,3 +11,4 @@ class Enumeration
                 return key;
     }
 }
+module.exports = Enumeration;
