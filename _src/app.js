@@ -1,4 +1,4 @@
-import "./js_external/uuid.js";
+/*import "./js_external/uuid.js";
 import "./framework/util.js";
 import "./framework/enumeration.js";
 import "./framework/base.js";
@@ -6,6 +6,36 @@ import "./framework/delegate.js";
 import "./framework/emitter.js";
 import "./framework/base_ctrl.js";
 import "./framework/application.js";
+
+import "./js_external/localforage.min.js";
+import "./js_external/hammer.min.js";
+import "./js_external/hammer-time.min.js";
+import "./js/enum.js";
+import "./js/prelabel.js";
+import "./js/tag.js";
+import "./js/underline.js";
+import "./js/sim.js";
+import "./js/mode_icon.js";
+import "./js/bar.js";
+import "./js/note.js";
+import "./js/diary.js";
+import "./js/action_bar.js";
+import "./js/storage.js";
+import "./js/cmd.js";
+import "./app.js";*/
+
+var ActionBar = require("./js/action_bar.js");
+var CMD = require("./js/cmd.js");
+var Diary = require("./js/diary.js");
+// var En = require("./js/enum.js");
+var ModeIcon = require("./js/mode_icon.js");
+var Note = require("./js/note.js");
+var Prelabel = require("./js/prelabel.js");
+var SIM = require("./js/sim.js");
+// var storage = require("./js/storage.js");
+var Tag = require("./js/tag.js");
+var Underline = require("./js/underline");
+
 var app = (()=>{
     //Результирующий экспорт
     let $ = {};

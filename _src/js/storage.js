@@ -1,5 +1,6 @@
 "use strict";
 var Emitter = require("./framework/emitter.js");
+var localforage = require("exports-loader?localforage!./js_external.js");
 module.exports = LocalStorage;
 class LocalStorage extends Emitter
 {

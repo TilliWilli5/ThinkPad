@@ -1,5 +1,4 @@
 "use strict";
-module.exports = Base;
 class Base
 {
     constructor(pCore){
@@ -26,3 +25,4 @@ class Base
         throw `Not implemented: ${this.constructor.name}${pMethodName?"."+pMethodName:""}`;
     }
 }
+module.exports = Base;

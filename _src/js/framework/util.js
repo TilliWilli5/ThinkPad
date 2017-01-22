@@ -1,4 +1,5 @@
 "use strict";
+var uuid = require("exports-loader?uuid!../js_external.js");
 module.exports = util;
 var util = {};
 util.enviroment = {
