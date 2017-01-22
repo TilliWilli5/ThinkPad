@@ -1,4 +1,6 @@
 "use strict";
+var Delegate = require("./delegate.js");
+module.exports = Emitter;
 class Emitter extends Delegate
 {
     constructor(pCore){

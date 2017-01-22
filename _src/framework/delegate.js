@@ -1,5 +1,6 @@
 "use strict";
-import "./base.js";
+var Base = require("./base.js");
+moduel.exports = Delegate;
 class Delegate extends Base
 {
     constructor(pCore){

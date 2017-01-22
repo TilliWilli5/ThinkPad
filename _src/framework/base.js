@@ -1,5 +1,5 @@
 "use strict";
-export default Base;
+module.exports = Base;
 class Base
 {
     constructor(pCore){

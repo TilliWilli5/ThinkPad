@@ -1,4 +1,5 @@
 "use strict";
+module.exports = util;
 var util = {};
 util.enviroment = {
     ZERO: 0,

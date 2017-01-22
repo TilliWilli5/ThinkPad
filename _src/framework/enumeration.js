@@ -1,3 +1,5 @@
+"use strict";
+module.exports = Enumeration;
 class Enumeration
 {
     constructor(pCore)

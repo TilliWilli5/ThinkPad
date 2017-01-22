@@ -1,4 +1,6 @@
 "use strict";
+var Emitter = require("./emitter.js");
+module.exports = BaseCtrl;
 class BaseCtrl extends Emitter
 {
     constructor(pCore){
